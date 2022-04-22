@@ -1,0 +1,17 @@
+{
+  "name": "@mxfriend/osc",
+  "description": "An OSC protocol implementation in TypeScript",
+  "license": "MIT",
+  "homepage": "https://github.com/mxfriend/mxfriend",
+  "repository": { "type": "vcs", "url": "https://github.com/mxfriend/mxfriend.git" },
+  "version": "1.0.0",
+  "author": { "name": "Dan Kadera", "email": "me@subsonic.cz", "url": "https://github.com/jahudka" },
+  "engines": {
+    "node": ">=16"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
+}
