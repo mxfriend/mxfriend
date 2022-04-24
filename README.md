@@ -1,6 +1,6 @@
 # MXfriend
 
-This repository contains a number of NodeJS packages which allow you
+This project consists of a number of NodeJS packages which allow you
 to write code to interact with the Behringer X32 / X-Air and Midas M32 / M-Air
 mixing consoles in various ways, as well as a number of opinionated utilities
 which the author personally uses.
