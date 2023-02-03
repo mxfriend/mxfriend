@@ -1,0 +1,34 @@
+{
+  "name": "@mxfriend/mxair-emulator",
+  "description": "A simple Behringer® X-Air series mixer emulator",
+  "license": "MIT",
+  "homepage": "https://github.com/mxfriend/mxfriend",
+  "repository": {
+    "type": "vcs",
+    "url": "https://github.com/mxfriend/mxfriend.git",
+    "directory": "packages/mxair-emulator"
+  },
+  "version": "1.0.0",
+  "author": {
+    "name": "Dan Kadera",
+    "email": "me@subsonic.cz",
+    "url": "https://github.com/jahudka"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/cli.js",
+  "bin": {
+    "mxair-emulator": "./dist/cli.js"
+  },
+  "dependencies": {
+    "@mxfriend/common": "^1.0.0",
+    "@mxfriend/osc": "^2.4.1",
+    "@mxfriend/oscom": "^2.1.6",
+    "@mxfriend/libmxair": "^1.0.0",
+    "@mxfriend/mx-helpers": "^1.0.0"
+  }
+}

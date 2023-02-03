@@ -1,0 +1,39 @@
+{
+  "name": "@mxfriend/common",
+  "description": "Common types and utilities for the Behringer® X32 / X-Air and Midas® M32 / M-Air mixers",
+  "license": "MIT",
+  "homepage": "https://github.com/mxfriend/mxfriend",
+  "repository": {
+    "type": "vcs",
+    "url": "https://github.com/mxfriend/mxfriend.git",
+    "directory": "packages/common"
+  },
+  "version": "1.0.0",
+  "author": {
+    "name": "Dan Kadera",
+    "email": "me@subsonic.cz",
+    "url": "https://github.com/jahudka"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cli": {
+      "types": "./dist/cli.d.ts",
+      "node": "./dist/cli.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@mxfriend/osc": "^2.4.1",
+    "@mxfriend/oscom": "^2.1.6"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "@tsconfig/recommended",
+  "compilerOptions": {
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ES2020",
+    "moduleResolution": "NodeNext",
+    "target": "ES2020",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": [
+    "src/frontend/**/*.ts"
+  ]
+}

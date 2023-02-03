@@ -1,0 +1,34 @@
+{
+  "name": "@mxfriend/mx-utils",
+  "description": "Command line utilities for the Behringer® X32 / X-Air and Midas® M32 / M-Air mixers",
+  "license": "MIT",
+  "homepage": "https://github.com/mxfriend/mxfriend",
+  "repository": {
+    "type": "vcs",
+    "url": "https://github.com/mxfriend/mxfriend.git",
+    "directory": "packages/mx-utils"
+  },
+  "version": "1.0.0",
+  "author": {
+    "name": "Dan Kadera",
+    "email": "me@subsonic.cz",
+    "url": "https://github.com/jahudka"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "mx-param-scanner": "./dist/scanner/cli.js",
+    "mx-forwarder": "./dist/forwarder.js"
+  },
+  "dependencies": {
+    "@mxfriend/common": "^1.0.0",
+    "@mxfriend/osc": "^2.4.1",
+    "@mxfriend/oscom": "^2.1.6"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "@tsconfig/node16",
+  "compilerOptions": {
+    "target": "ES2020",
+    "moduleResolution": "NodeNext",
+    "types": ["node", "jest"],
+    "declaration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noEmitOnError": true,
+    "strictNullChecks": true,
+  }
+}
