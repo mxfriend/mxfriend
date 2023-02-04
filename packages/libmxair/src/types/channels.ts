@@ -1,20 +1,17 @@
 import {
   Fader,
-  Frequency,
   Bitmask,
   Formatted,
   Mapped,
   BitmaskValue,
   MappedValue,
+  Gate as GateCommon,
+  Compressor,
   Eq4,
   Eq6 as Eq6Common,
-  FilterType,
-  CompressorMode,
-  CompressorDetection,
   AutomixGroup,
   Bool,
-  CompressorEnvelope,
-  CompressorRatio,
+  RawEnumValue,
 } from '@mxfriend/common';
 import {
   Collection,
@@ -24,11 +21,12 @@ import {
   Property,
   ScaledValue,
   StringValue,
-  IntValue,
   Linear,
+  After,
 } from '@mxfriend/oscom';
 import {
   AnalogIn,
+  Color,
   EqMode,
   GateMode,
   KeySrc,
@@ -41,36 +39,28 @@ import {
 
 export class ChannelConfig extends Container {
   @Property name: StringValue;
-  @Property color: IntValue;
+  @Property color: RawEnumValue<Color>;
   @Enum(AnalogIn) insrc: EnumValue<AnalogIn>;
   @Enum(UsbIn) rtnsrc: EnumValue<UsbIn>;
 
   constructor() {
     super(true);
   }
-
-  get source(): EnumValue<AnalogIn> {
-    return this.insrc;
-  }
 }
 
 export class ReturnConfig extends Container {
   @Property name: StringValue;
-  @Property color: IntValue;
+  @Property color: RawEnumValue<Color>;
   @Enum(StereoUsbIn) rtnsrc: EnumValue<StereoUsbIn>;
 
   constructor() {
     super(true);
   }
-
-  get source(): EnumValue<StereoUsbIn> {
-    return this.rtnsrc;
-  }
 }
 
 export class BusConfig extends Container {
   @Property name: StringValue;
-  @Property color: IntValue;
+  @Property color: RawEnumValue<Color>;
 
   constructor() {
     super(true);
@@ -87,10 +77,6 @@ export class ChannelPreamp extends Container {
   constructor() {
     super(true);
   }
-
-  get trim(): ScaledValue | undefined {
-    return this.rtnsw.$get() ? this.rtntrim : undefined;
-  }
 }
 
 export class ReturnPreamp extends Container {
@@ -100,71 +86,15 @@ export class ReturnPreamp extends Container {
   constructor() {
     super(true);
   }
-
-  get trim(): ScaledValue | undefined {
-    return this.rtnsw.$get() ? this.rtntrim : undefined;
-  }
 }
 
-export class Filter extends Container {
-  @Enum(Bool) on: EnumValue<Bool>;
-  @Enum(FilterType) type: EnumValue<FilterType>;
-  @Frequency() f: MappedValue;
-
-  constructor() {
-    super(true);
-  }
-}
-
-export class Gate extends Container {
-  @Enum(Bool) on: EnumValue<Bool>;
-  @Enum(GateMode) mode: EnumValue<GateMode>;
-  @Formatted('.1') @Linear(-80, 0, 161) thr: ScaledValue;
-  @Formatted('.1') @Linear(3, 60, 58) range: ScaledValue;
-  @Formatted('.0') @Linear(0, 120, 121) attack: ScaledValue;
-  @Formatted(3) @Mapped(0.02, 2000, 101) hold: MappedValue;
-  @Formatted('~.0') @Mapped(5, 4000, 101) release: MappedValue;
-  @Enum(KeySrc) keysrc: EnumValue<KeySrc>;
-  @Property filter: Filter;
-
-  constructor() {
-    super(true);
-  }
-}
-
-export class Compressor extends Container {
-  @Enum(Bool) on: EnumValue<Bool>;
-  @Enum(CompressorMode) mode: EnumValue<CompressorMode>;
-  @Enum(CompressorDetection) det: EnumValue<CompressorDetection>;
-  @Enum(CompressorEnvelope) env: EnumValue<CompressorEnvelope>;
-  @Formatted('.1') @Linear(-60, 0, 121) thr: ScaledValue;
-  @Enum(CompressorRatio) ratio: EnumValue<CompressorRatio>;
-  @Formatted('.0') @Linear(0, 5, 6) knee: ScaledValue;
-  @Formatted(3) @Linear(0, 24, 49) mgain: ScaledValue;
-  @Formatted('.0') @Linear(0, 120, 121) attack: ScaledValue;
-  @Formatted(3) @Mapped(0.02, 2000, 101) hold: MappedValue;
-  @Formatted('.0') @Mapped(5, 4000, 101) release: MappedValue;
-  @Formatted('.0') @Linear(0, 100, 51) mix: ScaledValue;
-  @Enum(Bool) auto: EnumValue<Bool>;
-  @Property filter: Filter;
-
-  constructor() {
-    super(true);
-  }
+export class Gate extends GateCommon {
+  @After('on') @Enum(GateMode) mode: EnumValue<GateMode>;
+  @After('release') @Enum(KeySrc) keysrc: EnumValue<KeySrc>;
 }
 
 export class SidechainCompressor extends Compressor {
-  @Enum(KeySrc) keysrc: EnumValue<KeySrc>;
-
-  $getKnownProperties(): any[] {
-    const props = super.$getKnownProperties();
-
-    if (props[props.length - 1] === 'keysrc') {
-      props.splice(12, 0, ...props.splice(props.length - 1, 1));
-    }
-
-    return props;
-  }
+  @After('mix') @Enum(KeySrc) keysrc: EnumValue<KeySrc>;
 }
 
 export class MonoInsert extends Container {
@@ -238,10 +168,6 @@ export class Send extends Container {
 
   constructor() {
     super(true);
-  }
-
-  get on(): EnumValue<Bool> {
-    return this.grpon;
   }
 }
 

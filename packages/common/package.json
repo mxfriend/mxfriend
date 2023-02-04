@@ -34,6 +34,6 @@
   ],
   "dependencies": {
     "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.6"
+    "@mxfriend/oscom": "^2.1.7"
   }
 }

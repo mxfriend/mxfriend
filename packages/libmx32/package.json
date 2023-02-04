@@ -1,12 +1,12 @@
 {
-  "name": "@mxfriend/mxair-emulator",
-  "description": "A simple Behringer® X-Air series mixer emulator",
+  "name": "@mxfriend/libmx32",
+  "description": "A library for communication with the Behringer® X32 and Midas® M32 mixers",
   "license": "MIT",
   "homepage": "https://github.com/mxfriend/mxfriend",
   "repository": {
     "type": "vcs",
     "url": "https://github.com/mxfriend/mxfriend.git",
-    "directory": "packages/mxair-emulator"
+    "directory": "packages/libmx32"
   },
   "version": "1.0.0",
   "author": {
@@ -17,18 +17,14 @@
   "engines": {
     "node": ">=16"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "main": "./dist/cli.js",
-  "bin": {
-    "mxair-emulator": "./dist/cli.js"
-  },
   "dependencies": {
     "@mxfriend/common": "^1.0.0",
     "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.7",
-    "@mxfriend/libmxair": "^1.0.0",
-    "@mxfriend/mx-helpers": "^1.0.0"
+    "@mxfriend/oscom": "^2.1.7"
   }
 }

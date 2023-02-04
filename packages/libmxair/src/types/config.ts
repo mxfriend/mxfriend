@@ -1,4 +1,4 @@
-import { Bool, Fader, Formatted, MappedValue } from '@mxfriend/common';
+import { AutomixConfig, Bool, Fader, Formatted, MappedValue, SoloMode } from '@mxfriend/common';
 import {
   Collection,
   Enum,
@@ -8,7 +8,7 @@ import {
   ScaledValue,
   Linear,
 } from '@mxfriend/oscom';
-import { SoloMode, SoloSource } from './enums';
+import { SoloSource } from './enums';
 
 
 export class ChannelLink extends Container {
@@ -58,15 +58,6 @@ export class SoloCfg extends Container {
   @Enum(Bool) mono: EnumValue<Bool>;
   @Enum(Bool) mute: EnumValue<Bool>;
   @Enum(Bool) dimpfl: EnumValue<Bool>;
-
-  constructor() {
-    super(true);
-  }
-}
-
-export class AutomixConfig extends Container {
-  @Enum(Bool) X: EnumValue<Bool>;
-  @Enum(Bool) Y: EnumValue<Bool>;
 
   constructor() {
     super(true);

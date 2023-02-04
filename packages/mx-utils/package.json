@@ -24,11 +24,12 @@
   ],
   "bin": {
     "mx-param-scanner": "./dist/scanner/cli.js",
+    "mx-gen-enum": "./dist/enumGenerator.js",
     "mx-forwarder": "./dist/forwarder.js"
   },
   "dependencies": {
     "@mxfriend/common": "^1.0.0",
     "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.6"
+    "@mxfriend/oscom": "^2.1.7"
   }
 }

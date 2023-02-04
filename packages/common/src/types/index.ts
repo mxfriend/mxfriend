@@ -1,5 +1,6 @@
 export * from './channels';
 export * from './commands';
+export * from './config';
 export * from './enums';
 export * from './fx';
 export * from './info';

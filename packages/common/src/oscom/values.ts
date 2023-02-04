@@ -1,5 +1,7 @@
-import { FloatValue, IntValue } from '@mxfriend/oscom';
+import { isOSCType, osc, OSCArgument } from '@mxfriend/osc';
+import { FloatValue, IntValue, Value } from '@mxfriend/oscom';
 import { ValueMap } from '../maps';
+import { intFromBatchBlob, intToBatchBlob } from './utils';
 
 const $map = Symbol('map');
 
@@ -39,4 +41,30 @@ export class BitmaskValue extends IntValue {
       (v) => parseInt(v.replace(/^%/, ''), 2),
     );
   }
+}
+
+
+export class RawEnumValue<T extends number> extends Value<T> {
+  $fromOSC(arg: OSCArgument, local: boolean | undefined, peer: unknown | undefined): void {
+    if (isOSCType(arg, 'i')) {
+      this.$set(arg.value as T, local, peer);
+    }
+  }
+
+  $toOSC(): OSCArgument | undefined {
+    return osc.optional.int(this.$get());
+  }
+
+  $fromText(value: string, local?: boolean, peer?: unknown) {
+    if (value.match(/^\d+$/)) {
+      this.$set(parseInt(value, 10) as T, local, peer);
+    }
+  }
+
+  $toText(): string | undefined {
+    return this.$get()?.toString();
+  }
+
+  $fromBatchBlob = intFromBatchBlob;
+  $toBatchBlob = intToBatchBlob;
 }

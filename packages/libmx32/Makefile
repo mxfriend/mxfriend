@@ -13,10 +13,7 @@ clean:
 
 .PHONY: tests
 tests:
-	jest --silent
+	jest
 
 dist:
 	tsc
-	chmod +x dist/scanner/cli.js
-	chmod +x dist/forwarder.js
-	chmod +x dist/enumGenerator.js

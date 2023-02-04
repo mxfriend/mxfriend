@@ -2,7 +2,8 @@ import { Value } from '@mxfriend/oscom';
 import { FxType } from '../enums';
 import {
   AmbienceParams,
-  ChamberParams, ChorusChamberParams,
+  ChamberParams,
+  ChorusChamberParams,
   ChorusParams,
   CombinatorParams,
   DelayChamberParams,
@@ -20,7 +21,8 @@ import {
   FourTapDelayParams,
   GatedReverbParams,
   GeqParams,
-  GuitarAmpParams, HallParams,
+  GuitarAmpParams,
+  HallParams,
   LeisureCompParams,
   ModulationDelayParams,
   MoodFilterParams,
@@ -46,7 +48,8 @@ import {
   VintageReverbParams,
   VintageRoomParams,
   WaveDesignerParams,
-  Xtec1AParams, XtecQ5Params,
+  Xtec1AParams,
+  XtecQ5Params,
 } from './effects';
 import { FxParamList } from './fxParamList';
 
@@ -54,7 +57,7 @@ export type FxParamListConstructor = {
   new (): FxParamList;
 };
 
-function Dual(ctor: FxParamListConstructor, n: number): FxParamListConstructor {
+export function Dual(ctor: FxParamListConstructor, n: number): FxParamListConstructor {
   const max = 2 * n;
 
   return class extends ctor {

@@ -29,7 +29,7 @@
   "dependencies": {
     "@mxfriend/common": "^1.0.0",
     "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.6",
+    "@mxfriend/oscom": "^2.1.7",
     "@mxfriend/libmxair": "^1.0.0",
     "insaner": "^1.3.0",
     "ws": "^8.12.0"

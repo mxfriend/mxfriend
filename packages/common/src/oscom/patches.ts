@@ -89,7 +89,12 @@ EnumValue.prototype.$fromText = function $fromText(this: EnumValue<number>, arg:
 };
 
 EnumValue.prototype.$toText = function $toText(this: EnumValue<number>): string | undefined {
-  return this.$toValue();
+  try {
+    return this.$toValue();
+  } catch (e) {
+    console.log(this.$address);
+    throw e;
+  }
 };
 
 EnumValue.prototype.$fromBatchBlob = intFromBatchBlob;

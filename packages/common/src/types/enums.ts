@@ -11,6 +11,12 @@ export const ClockRate = createEnum({ 'R48k': 0, 'R44k1': 1 } as const, ['48K', 
 export type ClockRate = EnumType<typeof ClockRate>;
 
 
+export const SoloMode = createEnum({
+  PFL: 0, AFL: 1,
+} as const);
+export type SoloMode = EnumType<typeof SoloMode>;
+
+
 export const CompressorMode = createEnum({
   Comp: 0, Exp: 1,
 } as const);

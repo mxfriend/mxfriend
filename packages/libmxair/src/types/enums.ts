@@ -119,19 +119,11 @@ export const SendTap = createEnum({
 export type SendTap = EnumType<typeof SendTap>;
 
 
-
-
 export const SoloSource = createEnum({
   Off: 0, LR: 1, LRPFL: 2, LRAFL: 3, AUX: 4, U1718: 5, Bus1: 6, Bus2: 7, Bus3: 8, Bus4: 9, Bus5: 10, Bus6: 11,
   Bus12: 12, Bus34: 13, Bus56: 14,
 } as const, { Off: 'OFF' }, false);
 export type SoloSource = EnumType<typeof SoloSource>;
-
-
-export const SoloMode = createEnum({
-  PFL: 0, AFL: 1,
-} as const);
-export type SoloMode = EnumType<typeof SoloMode>;
 
 
 export const MainSrc = createEnum({

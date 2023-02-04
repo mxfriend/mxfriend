@@ -1,37 +1,30 @@
-import {
-  Container,
-  Enum,
-  EnumValue,
-  Property,
-  Value,
-} from '@mxfriend/oscom';
-import { Bool, FxType } from '../enums';
-import { FxParamList } from './fxParamList';
-import { paramListMap } from './map';
+import { Container, Value } from '@mxfriend/oscom';
+import { FxParamListConstructor } from './map';
 
 
-export class Fx extends Container {
-  @Enum(FxType) type: EnumValue<FxType>;
-  @Enum(Bool) insert: EnumValue<Bool>;
-  @Property par: FxParamList;
+const $map = Symbol('map');
 
-  constructor() {
+export abstract class AbstractFx extends Container {
+  private readonly [$map]: Record<number, FxParamListConstructor>;
+
+  constructor(map: Record<number, FxParamListConstructor>) {
     super(true);
+    this[$map] = map;
     this.$updateParamList = this.$updateParamList.bind(this);
   }
 
-  $attach(prop: string | number, value: Container | Value) {
-    super.$attach(prop, value);
+  $attach(prop: string | number, node: Container | Value) {
+    super.$attach(prop, node);
 
-    if (prop === 'type') {
-      (value as EnumValue<FxType>).$on('local-change', this.$updateParamList);
-      (value as EnumValue<FxType>).$on('remote-change', this.$updateParamList);
+    if (node instanceof Value && prop === 'type') {
+      node.$on('local-change', this.$updateParamList);
+      node.$on('remote-change', this.$updateParamList);
     }
   }
 
-  private $updateParamList(type?: FxType): void {
+  private $updateParamList(type?: number): void {
     if (type !== undefined) {
-      this.par = new paramListMap[type];
+      this.$set('par', new this[$map][type]);
     }
   }
 }
