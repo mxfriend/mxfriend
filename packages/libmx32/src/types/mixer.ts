@@ -13,6 +13,19 @@ import { Config } from './config';
 import { FxList, InsertList } from './fx';
 import { HaSourceList, HeadampList } from './headamps';
 import { Outputs } from './outputs';
+import { Prefs } from './prefs';
+import {
+  AddCueCommand,
+  CopyCommand,
+  DeleteCommand,
+  LoadCommand,
+  PresetLibrary,
+  RenameCommand,
+  SaveCommand,
+  ShowData,
+  ShowDumpCommand,
+} from './showControl';
+import { USB } from './usb';
 
 export class Mixer extends MixerCommon {
   @Property config: Config;
@@ -28,4 +41,15 @@ export class Mixer extends MixerCommon {
   @Property headamps: HeadampList;
   @Property '-ha': HaSourceList;
   @Property '-insert': InsertList;
+  @Property '-show': ShowData;
+  @Property '-libs': PresetLibrary;
+  @Property copy: CopyCommand;
+  @Property add: AddCueCommand;
+  @Property save: SaveCommand;
+  @Property load: LoadCommand;
+  @Property rename: RenameCommand;
+  @Property delete: DeleteCommand;
+  @Property showdump: ShowDumpCommand;
+  @Property '-prefs': Prefs;
+  @Property '-usb': USB;
 }

@@ -6,4 +6,7 @@ export * from './headamps';
 export * from './misc';
 export * from './mixer';
 export * from './outputs';
+export * from './prefs';
 export * from './routing';
+export * from './showControl';
+export * from './usb';

@@ -7,4 +7,5 @@ export * from './info';
 export * from './meters';
 export * from './mixer';
 export * from './node';
+export * from './prefs';
 export * from './subscriptions';

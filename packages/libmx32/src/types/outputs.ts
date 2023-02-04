@@ -3,7 +3,6 @@ import {
   Collection,
   Container,
   Enum,
-  EnumDefinition,
   EnumValue,
   IntValue,
   Property,
@@ -15,24 +14,10 @@ import {
   iQGroup,
   iQSpeaker,
   iQEQ,
-  iQ8Model,
-  iQ10Model,
-  iQ12Model,
-  iQ15Model,
-  iQ15BModel,
-  iQ18BModel,
+  iQModelMap,
 } from './enums';
 import { Delay } from './misc';
 
-
-const iQModelMap: Record<Exclude<iQSpeaker, 0>, EnumDefinition> = {
-  [iQSpeaker.iQ8]: iQ8Model,
-  [iQSpeaker.iQ10]: iQ10Model,
-  [iQSpeaker.iQ12]: iQ12Model,
-  [iQSpeaker.iQ15]: iQ15Model,
-  [iQSpeaker.iQ15B]: iQ15BModel,
-  [iQSpeaker.iQ18B]: iQ18BModel,
-};
 
 export class iQSettings extends Container {
   @Enum(iQGroup) group: EnumValue<iQGroup>;
@@ -48,7 +33,7 @@ export class iQSettings extends Container {
   $attach(prop: string | number, node: Container | Value) {
     super.$attach(prop, node);
 
-    if (node instanceof Value && prop === 'type') {
+    if (node instanceof Value && prop === 'speaker') {
       node.$on('local-change', this.$updateModel);
       node.$on('remote-change', this.$updateModel);
     }

@@ -1,4 +1,4 @@
-import { createEnum, EnumType } from '@mxfriend/oscom';
+import { createEnum, EnumDefinition, EnumType } from '@mxfriend/oscom';
 
 export const Color = createEnum({
   Off: 0, Red: 1, Green: 2, Yellow: 3, Blue: 4, Magenta: 5, Cyan: 6, White: 7, InvOff: 8, InvRed: 9,
@@ -337,3 +337,162 @@ export const iQ18BModel = createEnum({
   iQ18B: 0, ELX18P: 1, PRX6118S: 2, S18Plus: 3, B18DP: 4,
 } as const, ['iQ18B', 'ELX18P', 'PRX6118S', 'S18+', 'B-18DP'], false);
 export type iQ18BModel = EnumType<typeof iQ18BModel>;
+
+export const iQModelMap: Record<Exclude<iQSpeaker, 0>, EnumDefinition> = {
+  [iQSpeaker.iQ8]: iQ8Model,
+  [iQSpeaker.iQ10]: iQ10Model,
+  [iQSpeaker.iQ12]: iQ12Model,
+  [iQSpeaker.iQ15]: iQ15Model,
+  [iQSpeaker.iQ15B]: iQ15BModel,
+  [iQSpeaker.iQ18B]: iQ18BModel,
+};
+
+
+
+
+export const CueMidiType = {
+  None: 0, ProgramChange: 1, ControlChange: 2, Note: 3,
+} as const;
+export type CueMidiType = EnumType<typeof CueMidiType>;
+
+
+export const ClockSource = createEnum({
+  Internal: 0, AES50A: 1, AES50B: 2, Card: 3,
+} as const, ['INT', 'AES50A', 'AES50B', 'CARD'], false);
+export type ClockSource = EnumType<typeof ClockSource>;
+
+export const ShowControlMode = createEnum({
+  Cues: 0, Scenes: 1, Snippets: 2,
+} as const);
+export type ShowControlMode = EnumType<typeof ShowControlMode>;
+
+export const ClockMode = createEnum({
+  C24: 0, C12: 1,
+} as const, ['24h', '12h'], false);
+export type ClockMode = EnumType<typeof ClockMode>;
+
+export const MuteLedMode = createEnum({
+  Normal: 0, Invert: 1,
+} as const, ['NORM', 'INV'], false);
+export type MuteLedMode = EnumType<typeof MuteLedMode>;
+
+
+export const RecorderControl = createEnum({
+  USB: 0, XLive: 1,
+} as const);
+export type RecorderControl = EnumType<typeof RecorderControl>;
+
+
+export const ControlSurfaceProtocol = createEnum({
+  MackieHCU: 0, MackieHUI: 1, Generic: 2,
+} as const, ['MC', 'HUI', 'CC'], false);
+export type ControlSurfaceProtocol = EnumType<typeof ControlSurfaceProtocol>;
+
+export const ControlSurfacePort = createEnum({
+  MIDI: 0, Card: 1, RTP: 2,
+} as const);
+export type ControlSurfacePort = EnumType<typeof ControlSurfacePort>;
+
+export const UFMode = createEnum({
+  U32_32: 0, U16_16: 1, U32_8: 2, U8_32: 3,
+} as const, ['32/32', '16/16', '32/8', '8/32'], false);
+export type UFMode = EnumType<typeof UFMode>;
+
+export const USBMode = createEnum({
+  U32_32: 0, U16_16: 1, U32_8: 2, U8_32: 3, U8_8: 4, U2_2: 5,
+} as const, ['32/32', '16/16', '32/8', '8/32', '8/8', '2/2'], false);
+export type USBMode = EnumType<typeof USBMode>;
+
+export const ADATWordClock = createEnum({
+  In: 0, Out: 1,
+} as const);
+export type ADATWordClock = EnumType<typeof ADATWordClock>;
+
+export const ADATSync = createEnum({
+  WordClock: 0, ADAT1: 1, ADAT2: 2, ADAT3: 3, ADAT4: 4,
+} as const, { WordClock: 'WC' }, false);
+export type ADATSync = EnumType<typeof ADATSync>;
+
+export const MADIMode = createEnum({
+  M56: 0, M64: 1,
+} as const, ['56', '64'], false);
+export type MADIMode = EnumType<typeof MADIMode>;
+
+export const MADIIn = createEnum({
+  In1_32: 0, In9_40: 1, In17_48: 2, In25_56: 3, In33_64: 4,
+} as const, ['1-32', '9-40', '17-48', '25-56', '33-64'], false);
+export type MADIIn = EnumType<typeof MADIIn>;
+
+export const MADIOut = createEnum({
+  Off: 0, Out1_32: 1, Out9_40: 2, Out17_48: 3, Out25_56: 4, Out33_64: 5,
+} as const, ['OFF', '1-32', '9-40', '17-48', '25-56', '33-64'], false);
+export type MADIOut = EnumType<typeof MADIOut>;
+
+export const MADISrc = createEnum({
+  Off: 0, Optical: 1, Coax: 2, Both: 3,
+} as const, { Optical: 'OPT' });
+export type MADISrc = EnumType<typeof MADISrc>;
+
+export const URecCard = createEnum({
+  SD1: 0, SD2: 1,
+} as const);
+export type URecCard = EnumType<typeof URecCard>;
+
+export const URecTracks = createEnum({
+  Ch32: 0, Ch16: 1, Ch8: 2,
+} as const, ['32Ch', '16Ch', '8Ch'], false);
+export type URecTracks = EnumType<typeof URecTracks>;
+
+export const URecPlaybackSource = createEnum({
+  SD: 0, USB: 1,
+} as const);
+export type URecPlaybackSource = EnumType<typeof URecPlaybackSource>;
+
+export const URecOutputSource = createEnum({
+  Rec: 0, Play: 1, Auto: 2,
+} as const);
+export type URecOutputSource = EnumType<typeof URecOutputSource>;
+
+
+export const RTAVisibility = createEnum({
+  Off: 0, P25: 1, P30: 2, P35: 3, P40: 4, P45: 5, P50: 6, P55: 7, P60: 8, P65: 9, P70: 10, P75: 11, P80: 12,
+} as const, ['OFF', '25%', '30%', '35%', '40%', '45%', '50%', '55%', '60%', '65%', '70%', '75%', '80%'], false);
+export type RTAVisibility = EnumType<typeof RTAVisibility>;
+
+export const RTASource = {
+  None: 0, Monitor: 1, Ch01: 2, Ch02: 3, Ch03: 4, Ch04: 5, Ch05: 6, Ch06: 7, Ch07: 8, Ch08: 9,
+  Ch09: 10, Ch10: 11, Ch11: 12, Ch12: 13, Ch13: 14, Ch14: 15, Ch15: 16, Ch16: 17, Ch17: 18,
+  Ch18: 19, Ch19: 20, Ch20: 21, Ch21: 22, Ch22: 23, Ch23: 24, Ch24: 25, Ch25: 26, Ch26: 27,
+  Ch27: 28, Ch28: 29, Ch29: 30, Ch30: 31, Ch31: 32, Ch32: 33, Aux1: 34, Aux2: 35, Aux3: 36,
+  Aux4: 37, Aux5: 38, Aux6: 39, Aux7: 40, Aux8: 41, Fx1L: 42, Fx1R: 43, Fx2L: 44, Fx2R: 45,
+  Fx3L: 46, Fx3R: 47, Fx4L: 48, Fx4R: 49, Bus01: 50, Bus02: 51, Bus03: 52, Bus04: 53, Bus05: 54,
+  Bus06: 55, Bus07: 56, Bus08: 57, Bus09: 58, Bus10: 59, Bus11: 60, Bus12: 61, Bus13: 62, Bus14: 63,
+  Bus15: 64, Bus16: 65, Mtx1: 66, Mtx2: 67, Mtx3: 68, Mtx4: 69, Mtx5: 70, Mtx6: 71, Main: 72, Mono: 73,
+} as const;
+export type RTASource = EnumType<typeof RTASource>;
+
+export const RTAPos = createEnum({
+  Pre: 0, Post: 1,
+} as const);
+export type RTAPos = EnumType<typeof RTAPos>;
+
+export const RTAMode = createEnum({
+  Bar: 0, Spectrogram: 1,
+} as const, ['BAR', 'SPEC'], false);
+export type RTAMode = EnumType<typeof RTAMode>;
+
+export const RTADetector = createEnum({
+  RMS: 0, Peak: 1,
+} as const);
+export type RTADetector = EnumType<typeof RTADetector>;
+
+export const RTAPeakHold = createEnum({
+  Off: 0, H1: 1, H2: 2, H3: 3, H4: 4, H5: 5, H6: 6, H7: 7, H8: 8,
+} as const, ['OFF', '1', '2', '3', '4', '5', '6', '8', '8'], false);
+export type RTAPeakHold = EnumType<typeof RTAPeakHold>;
+
+
+export const KeyboardLayout = createEnum({
+  Qwerty: 0, Qwertz: 1, Azerty: 2, Abcdef: 3,
+} as const);
+export type KeyboardLayout = EnumType<typeof KeyboardLayout>;

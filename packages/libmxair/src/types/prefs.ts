@@ -2,6 +2,7 @@ import {
   Bool,
   ClockRate,
   CompressorDetection,
+  IpAddress,
   Mapped,
   MappedValue,
 } from '@mxfriend/common';
@@ -12,7 +13,6 @@ import {
   Property,
   StringValue,
   IntValue,
-  Collection,
 } from '@mxfriend/oscom';
 import {
   AccessPointSecurity,
@@ -21,12 +21,6 @@ import {
   LanMode,
   UsbInterfaceMode,
 } from './enums';
-
-export class IpAddress extends Collection<IntValue> {
-  constructor() {
-    super(() => new IntValue(), { size: 4, callable: true });
-  }
-}
 
 export class LanConfig extends Container {
   @Enum(LanMode) mode: EnumValue<LanMode>;
