@@ -103,7 +103,7 @@ export class Client extends EventEmitter<ClientEvents> {
       addresses,
     });
 
-    this.runSubscriptions();
+    await this.runSubscriptions();
     this.postponeExpiration();
   }
 
@@ -120,7 +120,7 @@ export class Client extends EventEmitter<ClientEvents> {
       param2,
     });
 
-    this.runSubscriptions();
+    await this.runSubscriptions();
     this.postponeExpiration();
   }
 

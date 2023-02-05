@@ -82,7 +82,7 @@ EnumValue.prototype.$fromText = function $fromText(this: EnumValue<number>, arg:
     if (/^\d+$/.test(arg)) {
       this.$set(parseInt(arg, 10), local);
     } else {
-      console.log(this.$address, arg);
+      console.log(`EnumValue.$fromText() @ ${this.$address}:`, arg);
       throw e;
     }
   }
@@ -92,7 +92,7 @@ EnumValue.prototype.$toText = function $toText(this: EnumValue<number>): string 
   try {
     return this.$toValue();
   } catch (e) {
-    console.log(this.$address);
+    console.log(`EnumValue.$toText() @ ${this.$address}`);
     throw e;
   }
 };

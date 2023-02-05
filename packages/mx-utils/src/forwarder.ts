@@ -2,10 +2,10 @@
 
 import { parseArgs } from '@mxfriend/common/cli';
 import { UdpOSCPeer, UdpOSCPort } from '@mxfriend/osc/udp';
-import { osc } from '@mxfriend/osc';
+import { osc, OSCArgument } from '@mxfriend/osc';
 
-const [opts, publicIp, ...mixers] = parseArgs(process.argv, '-q', '<local ip>', '[...mixer ip[:port]]');
-const verbose = !opts.includes('-q');
+const [opts, publicIp, ...mixers] = parseArgs(process.argv, '-q', '-v', '<local ip>', '[...mixer ip[:port]]');
+const log = opts.includes('-v') ? logMsgWithArgs : opts.includes('-q') ? dontLog : logMsg;
 
 mixers.map(async (mixerConn) => {
   const [mixerIp, mixerPortStr] = mixerConn.split(':');
@@ -27,7 +27,7 @@ mixers.map(async (mixerConn) => {
 
   client.on('message', async ({ address, args }, peer) => {
     clientPeer = peer;
-    verbose && console.log('C->M', address, ...args);
+    log('>', address, args);
     await mixer.send(address, args);
   });
 
@@ -44,7 +44,17 @@ mixers.map(async (mixerConn) => {
       args = [active, osc.string(publicIp), ...rest];
     }
 
-    verbose && console.log('M->C', address, ...args);
+    log('<', address, args);
     await client.send(address, args, clientPeer);
   });
 });
+
+function logMsg(direction: '<' | '>', address: string): void {
+  console.log(direction, address);
+}
+
+function logMsgWithArgs(direction: '<' | '>', address: string, args: OSCArgument[]): void {
+  console.log(direction, address, ...args);
+}
+
+function dontLog(): void {}

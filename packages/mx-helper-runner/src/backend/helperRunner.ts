@@ -1,4 +1,4 @@
-import { HelperAdapterInterface } from '../lib';
+import { HelperAdapterInterface } from '@mxfriend/mx-helpers';
 
 export class HelperRunner {
   private readonly adapters: Map<string, HelperAdapterInterface> = new Map();

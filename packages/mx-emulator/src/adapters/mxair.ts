@@ -32,7 +32,7 @@ export class MXAirAdapter extends AbstractMXEmulatorAdapter<Mixer> implements Em
   }
 
   protected createRangeAddressResolver(sample: string): RangeAddressResolver {
-    const m = sample.match(/^(.*\/)?(\*+)(\/.*)?$/);
+    const m = sample.match(/^(?:.*\/)?(\*+)(?:\/.*)?$/);
 
     if (!m) {
       return (pattern: string, i: number) => {

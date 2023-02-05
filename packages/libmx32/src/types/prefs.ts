@@ -4,18 +4,21 @@ import {
   Bool,
   ClockRate,
   IpAddress,
-  Mapped, MappedValue,
+  Mapped,
+  MappedValue,
   RawEnumValue,
 } from '@mxfriend/common';
 import {
   Collection,
   Container,
   Enum,
-  EnumValue, IntValue,
+  EnumValue,
+  IntValue,
   Linear,
   Property,
   ScaledValue,
-  StringValue, Value,
+  StringValue,
+  Value,
 } from '@mxfriend/oscom';
 import {
   ADATSync,
@@ -92,10 +95,10 @@ export class CardPrefs extends Container {
 }
 
 export class RTAPrefs extends Container {
-  @Enum(RTAVisibility) visiblity: EnumValue<RTAVisibility>;
+  @Enum(RTAVisibility) visibility: EnumValue<RTAVisibility>;
   @Linear(0, 60, 11) gain: ScaledValue;
   @Enum(Bool) autogain: EnumValue<Bool>;
-  @Enum(RTASource) source: EnumValue<RTASource>;
+  @Property source: RawEnumValue<RTASource>;
   @Enum(RTAPos) pos: EnumValue<RTAPos>;
   @Enum(RTAMode) mode: EnumValue<RTAMode>;
   @Bitmask(6) options: BitmaskValue;

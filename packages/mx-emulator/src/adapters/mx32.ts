@@ -38,7 +38,7 @@ export class MX32Adapter extends AbstractMXEmulatorAdapter<Mixer> implements Emu
   }
 
   protected createRangeAddressResolver(sample: string): RangeAddressResolver {
-    const m = sample.match(/^(.*\/)?(\*+)(\/.*)?$/);
+    const m = sample.match(/^(?:.*\/)?(\*+)(?:\/.*)?$/);
 
     if (!m) {
       return (pattern: string) => pattern;

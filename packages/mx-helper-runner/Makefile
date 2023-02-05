@@ -17,3 +17,5 @@ tests:
 
 dist:
 	tsc
+	tsc -p tsconfig.frontend.json
+	parcel build --cache-dir var/cache/parcel --dist-dir dist/frontend --public-url / 'src/frontend/**/*.html'

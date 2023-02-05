@@ -2,6 +2,78 @@
 /xinfo "" "X32 Emulator" X32CORE 4.09
 /status active "" "X32 Emulator"
 
+/-stat Ch01 0 0 OFF 0 0 OFF OFF 0 OFF 0 OFF OFF BAR BAR OFF OFF 0 10 ON OFF 0 0
+/-stat/screen HOME OFF OFF
+/-stat/screen/CHAN HOME
+/-stat/screen/METER CHANNEL
+/-stat/screen/ROUTE HOME
+/-stat/screen/SETUP GLOB
+/-stat/screen/LIB CHAN
+/-stat/screen/FX HOME
+/-stat/screen/MON MONITOR
+/-stat/screen/USB HOME
+/-stat/screen/SCENE HOME
+/-stat/screen/ASSIGN HOME
+/-stat/aes50 %10000 "" ""
+/-stat/solosw OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF
+/-stat/talk OFF OFF
+/-stat/osc OFF
+/-stat/tape STOP "" 0 0
+/-stat/userpar/01/value 0
+/-stat/userpar/02/value 0
+/-stat/userpar/03/value 0
+/-stat/userpar/04/value 0
+/-stat/userpar/05/value 0
+/-stat/userpar/06/value 0
+/-stat/userpar/07/value 0
+/-stat/userpar/08/value 0
+/-stat/userpar/09/value 0
+/-stat/userpar/10/value 0
+/-stat/userpar/11/value 0
+/-stat/userpar/12/value 0
+/-stat/userpar/13/value 0
+/-stat/userpar/14/value 0
+/-stat/userpar/15/value 0
+/-stat/userpar/16/value 0
+/-stat/userpar/17/value 0
+/-stat/userpar/18/value 0
+/-stat/userpar/19/value 0
+/-stat/userpar/20/value 0
+/-stat/userpar/21/value 0
+/-stat/userpar/22/value 0
+/-stat/userpar/23/value 0
+/-stat/userpar/24/value 0
+/-stat/userpar/25/value 0
+/-stat/userpar/26/value 0
+/-stat/userpar/27/value 0
+/-stat/userpar/28/value 0
+/-stat/userpar/29/value 0
+/-stat/userpar/30/value 0
+/-stat/userpar/31/value 0
+/-stat/userpar/32/value 0
+/-stat/userpar/33/value 0
+/-stat/userpar/34/value 0
+/-stat/userpar/35/value 0
+/-stat/userpar/36/value 0
+/-stat/urec STOP 0 0
+/-undo/time ""
+/-usb "" ""
+/-usb/dir 0 0
+/-urec 0 0 0 0 0 NONE 0 0 0 0 NONE NONE "" "" "" 0
+/-urec/session/001 ""
+/-urec/marker/001 0
+/-show/prepos 1
+/-show/showfile/show "MyShow" 0 0 0 0 0 0 0 0 0 0 "4.09"
+/-prefs "MXFriend" 1.0 1.0 1.0 1.0 OFF 44K1 INT ON ON ON ON ON ON OFF %0000 OFF CUES 24h OFF OFF NORM "" USB 0
+/-prefs/ip OFF
+/-prefs/ip/addr 0 0 0 0
+/-prefs/ip/mask 255 255 255 0
+/-prefs/ip/gateway 0 0 0 0
+/-prefs/remote OFF MC MIDI %00000000000000
+/-prefs/card 1 32/32 32/32 IN WC 56 1-32 OFF OFF SD1 32Ch SD REC
+/-prefs/rta 80% 0 ON 0 PRE BAR %000000 PEAK 0.25 OFF
+/-prefs/key QWERTY
+
 /config/chlink OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF
 /config/auxlink OFF OFF OFF ON
 /config/fxlink ON ON ON ON

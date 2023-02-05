@@ -1,12 +1,12 @@
 {
-  "name": "@mxfriend/mx-helpers",
-  "description": "A collection of opinionated helpers and mixer assistants",
+  "name": "@mxfriend/mx-helper-runner",
+  "description": "A runner for @mxfriend/helpers",
   "license": "MIT",
   "homepage": "https://github.com/mxfriend/mxfriend",
   "repository": {
     "type": "vcs",
     "url": "https://github.com/mxfriend/mxfriend.git",
-    "directory": "packages/mx-helpers"
+    "directory": "packages/mx-helper-runner"
   },
   "version": "1.0.0",
   "author": {
@@ -17,8 +17,6 @@
   "engines": {
     "node": ">=16"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -27,6 +25,13 @@
     "@mxfriend/osc": "^2.4.1",
     "@mxfriend/oscom": "^2.1.7",
     "@mxfriend/libmxair": "^1.0.0",
-    "@mxfriend/libmx32": "^1.0.0"
+    "@mxfriend/libmx32": "^1.0.0",
+    "insaner": "^1.3.0",
+    "ws": "^8.12.0"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/ws": "^8.5.4",
+    "parcel": "^2.8.3"
   }
 }

@@ -160,7 +160,7 @@ export class Stat extends Container {
   @Property screen: Screens;
   @Property aes50: AES50State;
   @Property solosw: SoloSwList;
-  @Property talkback: TalkbackState;
+  @Property talk: TalkbackState;
   @Property osc: OscillatorState;
   @Property tape: Tape;
   @Property userpar: UserParams;

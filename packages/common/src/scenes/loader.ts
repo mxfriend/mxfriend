@@ -22,7 +22,8 @@ export class SceneLoader {
         node.$fromText(args[0], true);
       }
     } catch (e) {
-      console.log(address);
+      console.log(`SceneLoader.apply(): error applying '${address}'`);
+      console.log(...args);
       throw e;
     }
   }
