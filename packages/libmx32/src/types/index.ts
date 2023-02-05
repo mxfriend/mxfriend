@@ -9,4 +9,5 @@ export * from './outputs';
 export * from './prefs';
 export * from './routing';
 export * from './showControl';
+export * from './stat';
 export * from './usb';

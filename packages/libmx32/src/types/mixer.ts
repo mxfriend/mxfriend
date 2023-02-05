@@ -25,6 +25,7 @@ import {
   ShowData,
   ShowDumpCommand,
 } from './showControl';
+import { Stat } from './stat';
 import { USB } from './usb';
 
 export class Mixer extends MixerCommon {
@@ -52,4 +53,5 @@ export class Mixer extends MixerCommon {
   @Property showdump: ShowDumpCommand;
   @Property '-prefs': Prefs;
   @Property '-usb': USB;
+  @Property '-stat': Stat;
 }
