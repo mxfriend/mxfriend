@@ -548,6 +548,17 @@ export const URecState = createEnum({ Stop: 0, PPause: 1, Play: 2, Rec: 3 } as c
 export type URecState = EnumType<typeof URecState>;
 
 
-// export const X = createEnum({} as const);
-// export type X = EnumType<typeof X>;
+export const BatteryState = createEnum({ None: 0, Good: 1, Low: 2 } as const);
+export type BatteryState = EnumType<typeof BatteryState>;
 
+export const XLiveSrate = { R44k1: 0, R48k: 1 } as const;
+export type XLiveSrate = EnumType<typeof XLiveSrate>;
+
+export const XLiveTracks = { None: 0, X8: 1, X16: 2, X32: 3 } as const;
+export type XLiveTracks = EnumType<typeof XLiveTracks>;
+
+export const XLiveSpan = { None: 0, Span1of2: 1, Span2of2: 2, JumpTo2of2: 3 } as const;
+export type XLiveSpan = EnumType<typeof XLiveSpan>;
+
+export const XLiveSDState = createEnum({ None: 0, Ready: 1, Protect: 2, Error: 3 } as const);
+export type XLiveSDState = EnumType<typeof XLiveSDState>;

@@ -1,3 +1,4 @@
+export * from './actions';
 export * from './channels';
 export * from './config';
 export * from './enums';
@@ -10,4 +11,5 @@ export * from './prefs';
 export * from './routing';
 export * from './showControl';
 export * from './stat';
+export * from './urec';
 export * from './usb';

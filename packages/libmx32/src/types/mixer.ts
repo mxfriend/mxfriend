@@ -1,5 +1,6 @@
 import { Mixer as MixerCommon } from '@mxfriend/common';
 import { Property } from '@mxfriend/oscom';
+import { Actions } from './actions';
 import {
   AuxInList,
   BusList,
@@ -26,6 +27,7 @@ import {
   ShowDumpCommand,
 } from './showControl';
 import { Stat } from './stat';
+import { URec } from './urec';
 import { USB } from './usb';
 
 export class Mixer extends MixerCommon {
@@ -51,7 +53,9 @@ export class Mixer extends MixerCommon {
   @Property rename: RenameCommand;
   @Property delete: DeleteCommand;
   @Property showdump: ShowDumpCommand;
+  @Property '-action': Actions;
   @Property '-prefs': Prefs;
   @Property '-usb': USB;
   @Property '-stat': Stat;
+  @Property '-urec': URec;
 }

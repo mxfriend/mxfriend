@@ -123,7 +123,7 @@ export class UserParams extends Collection<UserParam> {
   }
 }
 
-export class URec extends Container {
+export class URecStat extends Container {
   @Enum(URecState) state: EnumValue<URecState>;
   @Property etime: IntValue;
   @Property rtime: IntValue;
@@ -164,7 +164,7 @@ export class Stat extends Container {
   @Property osc: OscillatorState;
   @Property tape: Tape;
   @Property userpar: UserParams;
-  @Property urec: URec;
+  @Property urec: URecStat;
 
   constructor() {
     super(true);

@@ -2,11 +2,15 @@ import { Container, Node, Value } from '@mxfriend/oscom';
 import { applyToCallable } from '../types';
 
 export class SceneSerializer {
-  serialize(root: Node): string {
-    return [...this.serializeNode(root)].join('');
+  serialize(root: Node, withHidden: boolean = false): string {
+    return [...this.serializeNode(root, withHidden)].join('');
   }
 
-  *serializeNode(node: Node): IterableIterator<string> {
+  *serializeNode(node: Node, hidden: boolean = false): IterableIterator<string> {
+    if (!hidden && node.$address.startsWith('/-')) {
+      return;
+    }
+
     if (node instanceof Container) {
       const [results, unused] = applyToCallable(node, [], (node) => node.$toText());
 
