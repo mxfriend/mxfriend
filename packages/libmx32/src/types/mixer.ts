@@ -38,7 +38,7 @@ export class Mixer extends MixerCommon {
   @Property dca: DCAList;
   @Property fx: FxList;
   @Property outputs: Outputs;
-  @Property headamps: HeadampList;
+  @Property headamp: HeadampList;
   @Property '-ha': HaSourceList;
   @Property '-insert': InsertList;
   @Property '-show': ShowData;

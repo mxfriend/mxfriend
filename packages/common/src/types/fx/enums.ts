@@ -52,8 +52,8 @@ export const DeEsserMode = createEnum({ Stereo: 0, MidSide: 1 } as const, ['ST',
 export type DeEsserMode = EnumType<typeof DeEsserMode>;
 
 export const Xtec1ALoFreq = createEnum({
-  'F0': 0, 'F30': 1, 'F60': 2, 'F100': 3,
-} as const, ['0', '30', '60', '100']);
+  'F20': 0, 'F30': 1, 'F60': 2, 'F100': 3,
+} as const, ['20', '30', '60', '100']);
 export type Xtec1ALoFreq = EnumType<typeof Xtec1ALoFreq>;
 
 export const Xtec1AMidFreq = createEnum({

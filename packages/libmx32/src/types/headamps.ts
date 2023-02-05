@@ -3,7 +3,7 @@ import { Collection, Container, IntValue, Property } from '@mxfriend/oscom';
 
 export class HeadampList extends Collection<ChannelHeadamp> {
   constructor() {
-    super(() => new ChannelHeadamp(), { size: 128, pad: 3 });
+    super(() => new ChannelHeadamp(), { size: 128, pad: 3, base: 0 });
   }
 }
 

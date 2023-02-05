@@ -19,7 +19,7 @@ export class SendFxSources extends Container {
 
 export class SendFx extends AbstractFx {
   @Enum(FxType) type: EnumValue<FxType>;
-  @Property source: FxSource;
+  @Property source: SendFxSources;
   @Property par: FxParamList;
 
   constructor() {

@@ -1,6 +1,6 @@
 import { EnumValue, getLinearScale, ScaledValue, Value } from '@mxfriend/oscom';
 import { getValueMap } from '../../../maps';
-import { formatted, MappedValue } from '../../../oscom';
+import { formatted, MappedValue, RawEnumValue } from '../../../oscom';
 import { Bool } from '../../enums';
 import {
   CombinatorBandSolo,
@@ -112,19 +112,19 @@ export class CombinatorParams extends FxParamList {
       case 12: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 13: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 14: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
-      case 15: return new EnumValue(Bool);
+      case 15: return new RawEnumValue();
       case 16: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 17: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
-      case 18: return new EnumValue(Bool);
+      case 18: return new RawEnumValue();
       case 19: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 20: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
-      case 21: return new EnumValue(Bool);
+      case 21: return new RawEnumValue();
       case 22: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 23: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
-      case 24: return new EnumValue(Bool);
+      case 24: return new RawEnumValue();
       case 25: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
       case 26: return formatted(new ScaledValue(getLinearScale(-10, 10, 41)), '.1');
-      case 27: return new EnumValue(Bool);
+      case 27: return new RawEnumValue();
       case 28: return new EnumValue(CombinatorMeterMode);
       default: return super.$createParam(param);
     }
