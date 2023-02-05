@@ -37,7 +37,8 @@ export function parseArgs(argv: string[], ...options: string[]): [string[], ...s
   return [opts, ...args];
 
   function printUsage(): [] {
-    log(`Usage: ${argv[0]} ${argv[1]} [${options.join('|')}] ${required.join(' ')} ${optional.join(' ')}\n\n`);
+    const opts = options.length ? `[${options.join('|')}] ` : '';
+    log(`Usage: ${argv[0]} ${argv[1]} ${opts}${required.join(' ')} ${optional.join(' ')}\n\n`);
     process.exit(1);
   }
 }
