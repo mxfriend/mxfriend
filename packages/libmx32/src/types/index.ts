@@ -6,6 +6,7 @@ export * from './fx';
 export * from './headamps';
 export * from './misc';
 export * from './mixer';
+export * from './meters';
 export * from './outputs';
 export * from './prefs';
 export * from './routing';

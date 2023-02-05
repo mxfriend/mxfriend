@@ -17,5 +17,5 @@ tests:
 
 dist:
 	tsc
-	mkdir -p dist/data
-	cp -rf src/data/*.scn dist/data/
+	cp -rf src/adapters/data dist/adapters/
+	chmod +x dist/cli.js

@@ -5,11 +5,11 @@ import {
   FormatSubscribeCommand,
   XRemoteCommand,
 } from '@mxfriend/common';
-import { Mixer } from '@mxfriend/libmxair';
-import { StereoLink, MXAirStereoLinkAdapter } from '@mxfriend/mx-helpers';
+import { StereoLink } from '@mxfriend/mx-helpers';
 import { AnyEventHandler, osc, OSCArgument } from '@mxfriend/osc';
 import { UdpOSCPeer, UdpOSCPort } from '@mxfriend/osc/udp';
 import { Container, Dispatcher, Node, Value } from '@mxfriend/oscom';
+import { EmulatorAdapterInterface } from './adapters';
 import { Client, Updates } from './client';
 
 export type ClientMap = Iterable<Client> & {
@@ -18,21 +18,21 @@ export type ClientMap = Iterable<Client> & {
 
 const $key = Symbol('EmulatorDispatcher');
 
-export class MXAirEmulatorDispatcher extends Dispatcher {
-  private readonly mixer: Mixer;
+export class EmulatorDispatcher extends Dispatcher {
+  private readonly adapter: EmulatorAdapterInterface;
   private readonly stereoLink: StereoLink;
   private readonly clients: ClientMap;
 
-  constructor(port: UdpOSCPort, mixer: Mixer, clients: ClientMap) {
+  constructor(port: UdpOSCPort, adapter: EmulatorAdapterInterface, clients: ClientMap) {
     super(port);
-    this.mixer = mixer;
-    this.stereoLink = new StereoLink(new MXAirStereoLinkAdapter(mixer), this, true);
+    this.adapter = adapter;
+    this.stereoLink = new StereoLink(adapter.createStereoLinkAdapter(), this, true);
     this.clients = clients;
     this.handleNodeChange = this.handleNodeChange.bind(this);
   }
 
   async init(): Promise<void> {
-    this.add($key, this.mixer);
+    this.add($key, this.adapter.getMixer());
     await this.stereoLink.init();
 
     this.stereoLink.on('link', (a, b, native) => {
@@ -83,7 +83,7 @@ export class MXAirEmulatorDispatcher extends Dispatcher {
       yield ['remote-subscribe', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
         const [start, end, tf] = osc.extract(args, 'i?', 'i?', 'i?');
         const client = peer && this.clients.get(peer.ip, peer.port);
-        client && await client.subscribeMeters(node.$address, this.mixer.meters.$indexOf(node), start, end, tf);
+        client && await client.subscribeMeters(node.$address, this.adapter.getMeters().$indexOf(node), start, end, tf);
       }];
     }
   }

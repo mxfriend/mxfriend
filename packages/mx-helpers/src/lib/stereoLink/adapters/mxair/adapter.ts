@@ -42,7 +42,7 @@ export class MXAirStereoLinkAdapter implements StereoLinkAdapterInterface {
     yield * this.getLinkableValuePairsMatching(getLinkabilityChecker(this.mixer), ch1, ch2);
     yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2)];
 
-    if (ch1 instanceof Channel && ch2 instanceof Channel) {
+    if (this.mixer.config.linkcfg.preamp.$get() && ch1 instanceof Channel && ch2 instanceof Channel) {
       const in1 = ch1.preamp.rtnsw.$get() ? ch1.config.insrc.$get() : undefined;
       const in2 = ch2.preamp.rtnsw.$get() ? ch2.config.insrc.$get() : undefined;
 

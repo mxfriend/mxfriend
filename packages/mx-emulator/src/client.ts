@@ -1,7 +1,7 @@
 import { isBatchCapable } from '@mxfriend/common';
-import { Mixer } from '@mxfriend/libmxair';
 import { $Buffer, BufferInterface, EventEmitter, osc, OSCArgument } from '@mxfriend/osc';
-import { MXAirEmulatorDispatcher } from './dispatcher';
+import { EmulatorAdapterInterface } from './adapters';
+import { EmulatorDispatcher } from './dispatcher';
 
 export type NodeSubscription = {
   type: 'node';
@@ -49,17 +49,17 @@ export class Client extends EventEmitter<ClientEvents> {
   readonly port: number;
   updates: Updates = Updates.None;
 
-  private readonly dispatcher: MXAirEmulatorDispatcher;
-  private readonly mixer: Mixer;
+  private readonly adapter: EmulatorAdapterInterface;
+  private readonly dispatcher: EmulatorDispatcher;
   private readonly subscriptions: Map<string, Subscription> = new Map();
   private subscriptionTmr?: NodeJS.Timeout;
   private updatesTmr?: NodeJS.Timeout;
   private expirationTmr?: NodeJS.Timeout;
 
-  constructor(dispatcher: MXAirEmulatorDispatcher, mixer: Mixer, address: string, port: number) {
+  constructor(adapter: EmulatorAdapterInterface, dispatcher: EmulatorDispatcher, address: string, port: number) {
     super();
+    this.adapter = adapter;
     this.dispatcher = dispatcher;
-    this.mixer = mixer;
     this.address = address;
     this.port = port;
     this.postponeExpiration();
@@ -93,7 +93,7 @@ export class Client extends EventEmitter<ClientEvents> {
 
   async batchSubscribe(alias: string, patterns: string[], rangeStart: number, rangeEnd: number, factor: number = 1): Promise<void> {
     const now = Date.now();
-    const addresses = resolveAddresses(patterns, rangeStart, rangeEnd);
+    const addresses = this.adapter.resolveSubscriptionPatterns(patterns, rangeStart, rangeEnd);
 
     this.subscriptions.set(alias, {
       type: 'batch',
@@ -171,13 +171,13 @@ export class Client extends EventEmitter<ClientEvents> {
       if (subscription.next <= now) {
         switch (subscription.type) {
           case 'node':
-            await this.dispatcher.send(this.mixer.$lookup(subscription.address), this);
+            await this.dispatcher.send(this.adapter.getMixer().$lookup(subscription.address), this);
             break;
           case 'batch':
             await this.dispatcher.sendMessage(alias, this.getBatchPayload(subscription.addresses), this);
             break;
           case 'meter': {
-            const data = this.mixer.meters.$get(subscription.bank).$toBatchBlob();
+            const data = this.adapter.getMeters().$get(subscription.bank).$toBatchBlob();
             await this.dispatcher.sendMessage(alias, osc.compose('b', data), this);
             break;
           }
@@ -199,7 +199,7 @@ export class Client extends EventEmitter<ClientEvents> {
     let size: number = 0;
 
     for (const address of addresses) {
-      const node = this.mixer.$lookup(address);
+      const node = this.adapter.getMixer().$lookup(address);
 
       if (isBatchCapable(node)) {
         const data = node.$toBatchBlob();
@@ -223,33 +223,4 @@ export class Client extends EventEmitter<ClientEvents> {
   private expire(): void {
     this.emit('expire', this);
   }
-}
-
-function resolveAddresses(patterns: string[], rangeStart: number, rangeEnd: number): string[] {
-  const indices: number[] = [...new Array(rangeEnd - rangeStart + 1).keys()];
-  const resolve = createRangeAddressResolver(patterns[0]);
-  return indices.flatMap((i) => patterns.map((pattern) => resolve(pattern, rangeStart + i)));
-}
-
-function createRangeAddressResolver(sample: string) {
-  const m = sample.match(/^(.*\/)?(\*+)(\/.*)?$/);
-
-  if (!m) {
-    return (pattern: string, i: number) => {
-      if (i > 30) return `/lr${pattern}`;
-      if (i > 26) return `/fxsend/${i - 26}${pattern}`;
-      if (i > 20) return `/bus/${i - 20}${pattern}`;
-      if (i > 16) return `/rtn/${i - 16}${pattern}`;
-      if (i > 15) return `/rtn/aux${pattern}`;
-      return `/ch/${(i + 1).toString().padStart(2, '0')}${pattern}`;
-    };
-  }
-
-  const placeholder = m[1];
-  const re = new RegExp(placeholder.replace(/\*/g, '\\*'));
-  const pad = placeholder.length > 1
-    ? (v: number) => v.toString().padStart(placeholder.length, '0')
-    : (v: number) => v.toString();
-
-  return (pattern: string, i: number) => pattern.replace(re, pad(i + 1));
 }

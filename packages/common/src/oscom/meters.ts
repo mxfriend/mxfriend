@@ -72,8 +72,8 @@ export abstract class AbstractMeterBank<
   abstract $toDb(): number[];
   abstract $toDb(idx: number): number;
 
-  abstract $fromDb(values: number[]): void;
-  abstract $fromDb(idx: number, value: number): void;
+  abstract $fromDb(values: number[], local?: boolean, peer?: unknown): void;
+  abstract $fromDb(idx: number, value: number, local?: boolean, peer?: unknown): void;
 
   $fromBatchBlob(blob: BufferInterface, cursor: Cursor, local?: boolean, peer?: unknown): void {
     const blobElems = blob.readInt32LE(cursor.inc(4)) * 4 / this[$ctor].BYTES_PER_ELEMENT;

@@ -135,7 +135,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
     }
 
     if (bus instanceof Bus && bus.dyn.on.$get()) {
-      yield [bus.dyn.thr, true];
+      yield bus.dyn.thr;
     }
   }
 

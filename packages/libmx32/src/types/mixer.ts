@@ -13,6 +13,7 @@ import {
 import { Config } from './config';
 import { FxList, InsertList } from './fx';
 import { HaSourceList, HeadampList } from './headamps';
+import { MeterBanks } from './meters';
 import { Outputs } from './outputs';
 import { Prefs } from './prefs';
 import {
@@ -58,4 +59,5 @@ export class Mixer extends MixerCommon {
   @Property '-usb': USB;
   @Property '-stat': Stat;
   @Property '-urec': URec;
+  @Property meters: MeterBanks;
 }

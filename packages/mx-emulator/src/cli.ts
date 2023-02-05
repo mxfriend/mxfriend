@@ -1,14 +1,19 @@
-import { parseArgs } from '@mxfriend/common/cli';
+#!/usr/bin/env node
+
+import { parseArgs, log } from '@mxfriend/common/cli';
 import { UdpOSCPort } from '@mxfriend/osc/udp';
+import { EmulatorAdapterInterface, MX32Adapter, MXAirAdapter } from './adapters';
 import { Emulator } from './emulator';
 
 import './patches';
 
-const [, ip, ...patterns] = parseArgs(process.argv, '<ip>', '[...patterns]');
+const [, model, ip, ...patterns] = parseArgs(process.argv, '<model>', '<ip>', '[...patterns]');
 
 (async () => {
+  const adapter = createAdapter(model);
+
   const port = new UdpOSCPort({
-    localPort: 10024,
+    localPort: adapter.getPort(),
   });
 
   if (patterns.length) {
@@ -26,9 +31,21 @@ const [, ip, ...patterns] = parseArgs(process.argv, '<ip>', '[...patterns]');
     };
   }
 
-  const emulator = new Emulator(port, ip);
+  const emulator = new Emulator(port, adapter, ip);
   await emulator.start();
 })();
+
+
+function createAdapter(model: string): EmulatorAdapterInterface {
+  for (const adapter of [MX32Adapter, MXAirAdapter]) {
+    if (adapter.supports(model)) {
+      return new adapter(model);
+    }
+  }
+
+  log(`Unsupported mixer model: '${model}'`);
+  process.exit(1);
+}
 
 function formatPattern(pattern: string): string {
   return pattern

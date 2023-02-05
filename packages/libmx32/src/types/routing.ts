@@ -2,7 +2,9 @@ import { RawEnumValue } from '@mxfriend/common';
 import { Collection, Container, Enum, EnumValue, Property } from '@mxfriend/oscom';
 import {
   AuxInPatch,
-  InputBlock, OutputBlockEven, OutputBlockOdd,
+  InputBlock,
+  OutputBlockEven,
+  OutputBlockOdd,
   PatchBlock,
   RoutingSwitch,
   UserInSource,
