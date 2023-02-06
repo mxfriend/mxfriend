@@ -18,7 +18,7 @@ export class Emulator extends EventEmitter<EmulatorEvents> {
   private readonly adapter: EmulatorAdapterInterface;
   private readonly dispatcher: EmulatorDispatcher;
   private readonly ip: string;
-  private meter: number = 0;
+  private meter: number = -128;
 
   constructor(conn: UdpOSCPort, adapter: EmulatorAdapterInterface, ip: string) {
     super();
@@ -56,7 +56,7 @@ export class Emulator extends EventEmitter<EmulatorEvents> {
   }
 
   private updateMeters(): void {
-    const value = Math.trunc(128 * (Math.sin(Math.PI * this.meter++ / 100) - 1)) / 2;
+    const value = 30 * (-1 - Math.cos(Math.PI * this.meter++ / 100));
 
     for (const bank of this.adapter.getMeters()) {
       bank.$fromDb(0, value, true);

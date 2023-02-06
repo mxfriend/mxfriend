@@ -5,7 +5,7 @@ function floatToDb(value: number): number {
 }
 
 function dbToFloat(value: number): number {
-  return 10 ** value / 20;
+  return 10 ** (value / 20);
 }
 
 export class Float32MeterBank extends AbstractMeterBank<Float32Array> {
