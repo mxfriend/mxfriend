@@ -17,6 +17,6 @@ export class HaSource extends Container {
 
 export class HaSourceList extends Collection<HaSource> {
   constructor() {
-    super(() => new HaSource(), { size: 40, pad: 2 });
+    super(() => new HaSource(), { size: 40, pad: 2, base: 0 });
   }
 }

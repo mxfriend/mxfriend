@@ -14,7 +14,7 @@
 /-stat/screen/USB HOME
 /-stat/screen/SCENE HOME
 /-stat/screen/ASSIGN HOME
-/-stat/aes50 %10000 "" ""
+/-stat/aes50 %11010 "Y   333300" "          "
 /-stat/solosw OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF
 /-stat/talk OFF OFF
 /-stat/osc OFF
@@ -73,6 +73,46 @@
 /-prefs/card 1 32/32 32/32 IN WC 56 1-32 OFF OFF SD1 32Ch SD REC
 /-prefs/rta 80% 0 ON 0 PRE BAR %000000 PEAK 0.25 OFF
 /-prefs/key QWERTY
+/-ha/00 0
+/-ha/01 1
+/-ha/02 2
+/-ha/03 3
+/-ha/04 4
+/-ha/05 5
+/-ha/06 6
+/-ha/07 7
+/-ha/08 8
+/-ha/09 9
+/-ha/10 10
+/-ha/11 11
+/-ha/12 12
+/-ha/13 13
+/-ha/14 14
+/-ha/15 15
+/-ha/16 16
+/-ha/17 17
+/-ha/18 18
+/-ha/19 19
+/-ha/20 20
+/-ha/21 21
+/-ha/22 22
+/-ha/23 23
+/-ha/24 24
+/-ha/25 25
+/-ha/26 26
+/-ha/27 27
+/-ha/28 28
+/-ha/29 29
+/-ha/30 30
+/-ha/31 31
+/-ha/32 -1
+/-ha/33 -1
+/-ha/34 -1
+/-ha/35 -1
+/-ha/36 -1
+/-ha/37 -1
+/-ha/38 -1
+/-ha/39 -1
 
 /config/chlink OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF
 /config/auxlink OFF OFF OFF ON

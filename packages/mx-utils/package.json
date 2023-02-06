@@ -25,7 +25,8 @@
   "bin": {
     "mx-param-scanner": "./dist/scanner/cli.js",
     "mx-gen-enum": "./dist/enumGenerator.js",
-    "mx-forwarder": "./dist/forwarder.js"
+    "mx-forwarder": "./dist/forwarder.js",
+    "mx-repl": "./dist/repl.js"
   },
   "dependencies": {
     "@mxfriend/common": "^1.0.0",
