@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { parseArgs, log } from '@mxfriend/common/cli';
-import { UdpOSCPort } from '@mxfriend/osc/udp';
+import { UdpOSCPeer, UdpOSCPort } from '@mxfriend/osc/udp';
 import { EmulatorAdapterInterface, MX32Adapter, MXAirAdapter } from './adapters';
 import { Emulator } from './emulator';
 
@@ -18,15 +18,21 @@ const [, model, ip, ...patterns] = parseArgs(process.argv, '<model>', '<ip>', '[
 
   if (patterns.length) {
     const pattern = new RegExp(`^(?:${patterns.map(formatPattern).join('|')})`);
+    const peers: Map<number, number> = new Map();
+    const pid = (peer?: UdpOSCPeer): number | string => {
+      if (!peer) return '?';
+      peers.has(peer.port) || peers.set(peer.port, peers.size + 1);
+      return peers.get(peer.port)!;
+    };
 
-    port.on('message', (msg) => pattern.test(msg.address) && console.log('C->M', msg.address, ...msg.args));
+    port.on('message', (msg, peer) => pattern.test(msg.address) && console.log(`C${pid(peer)}->M`, msg.address, ...msg.args));
 
     const send = port.send;
     port.send = async (address, args, to) => {
       try {
         return await send.call(port, address, args, to);
       } finally {
-        pattern.test(address) && console.log('M->C', address, ...(args ?? []));
+        pattern.test(address) && console.log(`M->C${pid(to)}`, address, ...(args ?? []));
       }
     };
   }

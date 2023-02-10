@@ -1,25 +1,26 @@
 import { Bool } from '@mxfriend/common';
-import { Bus, Channel, DCA, FxSend, LR, Mixer, MXAIR_UDP_PORT, Return } from '@mxfriend/libmxair';
+import { AuxIn, Bus, Channel, DCA, FxReturn, Main, Mixer, MX32_UDP_PORT } from '@mxfriend/libmx32';
 import { Container, EnumValue, StringValue } from '@mxfriend/oscom';
 import {
   HeadroomAdjustmentAdapterInterface,
-  MXAirHeadroomAdjustmentAdapter,
+  MX32HeadroomAdjustmentAdapter,
 } from '../../headroomAdjustment';
-import { MXAirStereoLinkAdapter, StereoLinkAdapterInterface } from '../../stereoLink';
+import { MX32StereoLinkAdapter, StereoLinkAdapterInterface } from '../../stereoLink';
 import { AbstractMXHelperAdapter } from './mx';
 
-export class MXAirHelperAdapter extends AbstractMXHelperAdapter<Mixer> {
+
+export class MX32HelperAdapter extends AbstractMXHelperAdapter<Mixer> {
   constructor() {
-    super({ port: MXAIR_UDP_PORT });
+    super({ port: MX32_UDP_PORT });
   }
 
   getId(): string {
-    return 'mxair';
+    return 'mx32';
   }
 
   getChannelNames(channels: Container[]): string[] {
     return channels.map(ch => {
-      if (ch instanceof Channel || ch instanceof Return || ch instanceof Bus || ch instanceof FxSend || ch instanceof LR || ch instanceof DCA) {
+      if (ch instanceof Channel || ch instanceof AuxIn || ch instanceof FxReturn || ch instanceof Bus || ch instanceof Main || ch instanceof DCA) {
         return this.resolveName(ch, ch.config.name.$get());
       } else {
         return '?';
@@ -32,15 +33,15 @@ export class MXAirHelperAdapter extends AbstractMXHelperAdapter<Mixer> {
   }
 
   protected createStereoLinkAdapter(mixer: Mixer): StereoLinkAdapterInterface {
-    return new MXAirStereoLinkAdapter(mixer);
+    return new MX32StereoLinkAdapter(mixer);
   }
 
   protected createHeadroomAdjustmentAdapter(mixer: Mixer): HeadroomAdjustmentAdapterInterface {
-    return new MXAirHeadroomAdjustmentAdapter(mixer);
+    return new MX32HeadroomAdjustmentAdapter(mixer);
   }
 
   protected * getChannelNameNodes(mixer: Mixer): Iterable<StringValue> {
-    for (const ch of [...mixer.ch, mixer.rtn.aux, ...mixer.rtn, ...mixer.bus, ...mixer.fxsend, mixer.lr, ...mixer.dca]) {
+    for (const ch of [...mixer.ch, ...mixer.auxin, ...mixer.fxrtn, ...mixer.bus, mixer.main.st, mixer.main.m, ...mixer.dca]) {
       yield ch.config.name;
     }
   }
@@ -54,22 +55,22 @@ export class MXAirHelperAdapter extends AbstractMXHelperAdapter<Mixer> {
 
     if (idx < 0) {
       throw new Error(`Unknown solo target: ${idx}`);
-    } else if (idx < 16) {
+    } else if (idx < 32) {
       return mixer.ch.$get(idx);
-    } else if (idx < 17) {
-      return mixer.rtn.aux;
-    } else if (idx < 21) {
-      return mixer.rtn.$get(idx - 17);
-    } else if (idx < 39) {
-      throw new Error(`Unknown solo target: ${idx}`);
-    } else if (idx < 45) {
-      return mixer.bus.$get(idx - 39);
-    } else if (idx < 49) {
-      return mixer.fxsend.$get(idx - 45);
-    } else if (idx < 50) {
-      return mixer.lr;
-    } else if (idx < 54) {
-      return mixer.dca.$get(idx - 50);
+    } else if (idx < 40) {
+      return mixer.auxin.$get(idx - 32);
+    } else if (idx < 48) {
+      return mixer.fxrtn.$get(idx - 40);
+    } else if (idx < 64) {
+      return mixer.bus.$get(idx - 48);
+    } else if (idx < 70) {
+      return mixer.mtx.$get(idx - 64);
+    } else if (idx < 71) {
+      return mixer.main.st;
+    } else if (idx < 72) {
+      return mixer.main.m;
+    } else if (idx < 80) {
+      return mixer.dca.$get(idx - 72);
     } else {
       throw new Error(`Unknown solo target: ${idx}`);
     }

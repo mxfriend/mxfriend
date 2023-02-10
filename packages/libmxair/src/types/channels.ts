@@ -159,6 +159,7 @@ export class GEQ extends Container {
   }
 }
 
+const $even = Symbol('even');
 
 export class Send extends Container {
   @Fader(161) level: MappedValue;
@@ -166,8 +167,16 @@ export class Send extends Container {
   @Enum(SendTap) tap: EnumValue<SendTap>;
   @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
 
-  constructor() {
+  private readonly [$even]: boolean;
+
+  constructor(even: boolean) {
     super(true);
+    this[$even] = even;
+  }
+
+  $getKnownProperties(): (string | number)[] {
+    const props = super.$getKnownProperties();
+    return this[$even] ? props.slice(0, 3) : props;
   }
 }
 
@@ -178,7 +187,7 @@ export class ChannelMix extends Collection<Send> {
   @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
 
   constructor() {
-    super(() => new Send(), { size: 10, pad: 2, callable: true });
+    super((i) => new Send(i % 2 > 0), { size: 10, pad: 2, callable: true });
   }
 }
 

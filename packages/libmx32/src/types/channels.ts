@@ -135,29 +135,33 @@ export class ExtendedEq6 extends Collection<ExtendedEqBand> {
   }
 }
 
+const $even = Symbol('even');
 
-export class Send extends Container {
+export abstract class AbstractSend extends Container {
   @Enum(Bool) on: EnumValue<Bool>;
   @Fader(161) level: MappedValue;
   @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
-  @Enum(SendType) type: EnumValue<SendType>;
   @Property panFollow: RawEnumValue<Bool>;
 
-  constructor() {
+  private readonly [$even]: boolean;
+
+  constructor(even: boolean) {
     super(true);
+    this[$even] = even;
+  }
+
+  $getKnownProperties(): (string | number)[] {
+    const props = super.$getKnownProperties();
+    return this[$even] ? props.slice(0, 2) : props;
   }
 }
 
-export class MatrixSend extends Container {
-  @Enum(Bool) on: EnumValue<Bool>;
-  @Fader(161) level: MappedValue;
-  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
-  @Enum(MatrixSendType) type: EnumValue<MatrixSendType>;
-  @Property panFollow: RawEnumValue<Bool>;
+export class Send extends AbstractSend {
+  @After('pan') @Enum(SendType) type: EnumValue<SendType>;
+}
 
-  constructor() {
-    super(true);
-  }
+export class MatrixSend extends AbstractSend {
+  @After('pan') @Enum(MatrixSendType) type: EnumValue<MatrixSendType>;
 }
 
 export class ChannelMix extends Collection<Send> {
@@ -169,7 +173,7 @@ export class ChannelMix extends Collection<Send> {
   @Fader(161) mlevel: MappedValue;
 
   constructor() {
-    super(() => new Send(), { size: 16, pad: 2, callable: true });
+    super((i) => new Send(i % 2 > 0), { size: 16, pad: 2, callable: true });
   }
 }
 
@@ -182,7 +186,7 @@ export class BusMix extends Collection<MatrixSend> {
   @Fader(161) mlevel: MappedValue;
 
   constructor() {
-    super(() => new MatrixSend(), { size: 6, pad: 2, callable: true });
+    super((i) => new MatrixSend(i % 2 > 0), { size: 6, pad: 2, callable: true });
   }
 }
 
@@ -201,7 +205,7 @@ export class MainMix extends Collection<MatrixSend> {
   @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
 
   constructor() {
-    super(() => new MatrixSend(), { size: 6, pad: 2, callable: true });
+    super((i) => new MatrixSend(i % 2 > 0), { size: 6, pad: 2, callable: true });
   }
 }
 

@@ -50,7 +50,7 @@ export class MX32Adapter extends AbstractMXEmulatorAdapter<Mixer> implements Emu
       ? (v: number) => v.toString().padStart(placeholder.length, '0')
       : (v: number) => v.toString();
 
-    return (pattern: string, i: number) => pattern.replace(re, pad(i + 1));
+    return (pattern: string, i: number) => pattern.replace(re, pad(i));
   }
 
   protected getBlankSceneFilePath(): string {

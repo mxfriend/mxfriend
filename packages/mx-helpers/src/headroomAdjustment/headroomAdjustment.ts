@@ -51,15 +51,20 @@ export class HeadroomAdjustment implements HelperInterface {
 
   getInfo(): HelperInfo {
     return {
-      name: 'Headroom adjust',
+      name: 'Headroom Adjustment',
     };
   }
 
   getState(channels: Container[]): HelperState {
     if (this.adjustment) {
-      return channels.length === this.adjustment.channels.length
+      if (
+        channels.length === this.adjustment.channels.length
         && this.adjustment.channels.every((ch) => channels.includes(ch))
-        ? 'active' : 'unavailable'
+      ) {
+        return 'active';
+      } else {
+        this.endAdjustment();
+      }
     }
 
     switch (channels.length) {

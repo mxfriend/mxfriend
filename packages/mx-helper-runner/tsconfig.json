@@ -1,9 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/backend"
+    "strictPropertyInitialization": false,
+    "outDir": "dist"
   },
   "include": [
-    "src/backend/**/*.ts"
+    "src/backend/**/*.ts",
+    "src/common/**/*.ts"
   ]
 }

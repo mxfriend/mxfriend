@@ -34,13 +34,13 @@ export class MXAirStereoLinkAdapter implements StereoLinkAdapterInterface {
       || ch1 instanceof Bus && (!ch2 || Math.abs(this.mixer.bus.$indexOf(ch1) - this.mixer.bus.$indexOf(ch2)) === 1);
   }
 
-  * getLinkableValuePairs(ch1: Container, ch2: Container): Iterable<[Value, Value]> {
+  * getLinkableValuePairs(ch1: Container, ch2: Container): Iterable<[a: Value, b: Value, delay?: boolean]> {
     if (!(ch1 instanceof Channel && ch2 instanceof Channel) && !(ch1 instanceof Bus && ch2 instanceof Bus)) {
       return;
     }
 
     yield * this.getLinkableValuePairsMatching(getLinkabilityChecker(this.mixer), ch1, ch2);
-    yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2)];
+    yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2), true];
 
     if (this.mixer.config.linkcfg.preamp.$get() && ch1 instanceof Channel && ch2 instanceof Channel) {
       const in1 = ch1.preamp.rtnsw.$get() ? ch1.config.insrc.$get() : undefined;

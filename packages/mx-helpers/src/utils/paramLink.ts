@@ -1,3 +1,4 @@
+import { sleep } from '@mxfriend/common';
 import { Dispatcher, Value } from '@mxfriend/oscom';
 import { NodeLock } from './nodeLock';
 
@@ -15,12 +16,16 @@ export class ParamLink<T = any> {
   private readonly remoteHandlerA: ChangeHandler<T>;
   private readonly remoteHandlerB: ChangeHandler<T>;
 
-  constructor(dispatcher: Dispatcher, a: Value<T>, b: Value<T>) {
+  constructor(dispatcher: Dispatcher, a: Value<T>, b: Value<T>, delayed?: boolean) {
     this.dispatcher = dispatcher;
     this.a = a;
     this.b = b;
 
-    const set = (n: Value<T>) => (v?: T) => v !== undefined && n.$set(v, true);
+    const set = (n: Value<T>) => async (v?: T) => {
+      delayed && await sleep(250);
+      v !== undefined && n.$set(v, true);
+    };
+
     this.localHandlerA = this.locks.lock(a, set(b));
     this.localHandlerB = this.locks.lock(b, set(a));
     this.remoteHandlerA = this.locks.lock(b, set(b));

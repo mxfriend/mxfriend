@@ -33,7 +33,7 @@
     "dist"
   ],
   "dependencies": {
-    "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.7"
+    "@mxfriend/osc": "^2.5.5",
+    "@mxfriend/oscom": "^2.1.9"
   }
 }

@@ -71,21 +71,36 @@ export class StereoTools implements HelperInterface {
   private async setup(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): Promise<void> {
     await this.dispatcher.addAndQuery($key, a, b);
 
-    let center: number = (a.$toValue()! + b.$toValue()!) / 2;
-    let width: number = b.$toValue()! - a.$toValue()!;
+    const lock = createMutualLock();
+    let center: number = Math.round(a.$toValue()! + b.$toValue()!) / 2;
+    let width: number = Math.round(b.$toValue()! - a.$toValue()!);
+    let tmr: NodeJS.Timeout | undefined = undefined;
+
+    const reset = () => {
+      clearTimeout(tmr);
+
+      tmr = setTimeout(() => {
+        center = Math.round(a.$toValue()! + b.$toValue()!) / 2;
+        width = Math.round(b.$toValue()! - a.$toValue()!);
+      }, 1500);
+    };
 
     const handlePan = () => {
-      const lpan = a.$toValue()!;
-      center = lpan + width / 2;
-      console.log(center, width);
-      b.$fromValue(lpan + width, true);
+      if (this.enabled && lock('a')) {
+        const lpan = Math.round(a.$toValue()!);
+        center = Math.max(-100, Math.min(100, lpan + width / 2));
+        b.$fromValue(lpan + width, true);
+        reset();
+      }
     };
 
     const handleWidth = () => {
-      const rpan = b.$toValue()!;
-      width = 2 * (rpan - center);
-      console.log(center, width);
-      a.$fromValue(center - width / 2, true);
+      if (this.enabled && lock('b')) {
+        const rpan = Math.round(b.$toValue()!);
+        width = Math.max(-200, Math.min(200, 2 * (rpan - center)));
+        a.$fromValue(center - width / 2, true);
+        reset();
+      }
     };
 
     a.$on('remote-change', handlePan);
@@ -103,4 +118,23 @@ export class StereoTools implements HelperInterface {
       this.map.delete(n);
     }
   }
+}
+
+type LockState = { ts: number };
+
+function createMutualLock() {
+  const a: LockState = { ts: 0 };
+  const b: LockState = { ts: 0 };
+
+  return (side: 'a' | 'b'): boolean => {
+    const now = Date.now();
+    const [local, remote] = side === 'a' ? [a, b] : [b, a];
+
+    if (now - remote.ts < 500) {
+      return false;
+    }
+
+    local.ts = now;
+    return true;
+  };
 }

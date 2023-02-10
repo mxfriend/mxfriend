@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@mxfriend/common": "^1.0.0",
-    "@mxfriend/osc": "^2.4.1",
-    "@mxfriend/oscom": "^2.1.7",
+    "@mxfriend/osc": "^2.5.5",
+    "@mxfriend/oscom": "^2.1.9",
     "@mxfriend/libmxair": "^1.0.0",
     "@mxfriend/libmx32": "^1.0.0",
     "@mxfriend/mx-helpers": "^1.0.0"

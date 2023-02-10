@@ -62,7 +62,7 @@ export class StereoLink extends EventEmitter<StereoLinkEvents> implements Helper
   }
 
   getState(channels: Container[]): HelperState {
-    if (channels.length < 1 && channels.length > 2) {
+    if (channels.length < 1 || channels.length > 2) {
       return 'unavailable';
     }
 
@@ -141,8 +141,8 @@ export class StereoLink extends EventEmitter<StereoLinkEvents> implements Helper
 
   private async toggleParams(a: Container, b: Container, on: boolean, state: LinkState): Promise<void> {
     if (on) {
-      for (const [va, vb] of this.adapter.getLinkableValuePairs(a, b)) {
-        const link = new ParamLink(this.dispatcher, va, vb);
+      for (const [va, vb, delay] of this.adapter.getLinkableValuePairs(a, b)) {
+        const link = new ParamLink(this.dispatcher, va, vb, delay);
         await link.sync(!this.local);
         state.params.push(link);
       }

@@ -32,10 +32,13 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     yield channel.mix.mono;
     yield channel.mix.mlevel;
 
-    for (const mix of channel.mix) {
+    for (const [i, mix] of channel.mix.$items(false, true)) {
       yield mix.on;
-      yield mix.type;
       yield mix.level;
+
+      if (i % 2 === 0) {
+        yield mix.type;
+      }
     }
 
     if (channel instanceof Channel) {
@@ -49,13 +52,16 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     }
   }
 
-  private * getBusRequiredNodes(bus: Bus, collection: Collection<Bus>, offset: number = 0): Iterable<Value> {
+  private * getBusRequiredNodes(bus: Bus, collection: Collection<Bus>): Iterable<Value> {
     const idx = collection.$indexOf(bus);
 
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn]) {
-      const mix = ch.mix.$get(idx + offset);
+      const mix = ch.mix.$get(idx);
       yield mix.on;
-      yield mix.type;
+
+      if (idx % 2 === 0) {
+        yield mix.type;
+      }
     }
 
     if (bus instanceof Bus) {
@@ -116,8 +122,12 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
       yield channel.mix.fader;
     }
 
-    for (const mix of channel.mix) {
-      if (mix.type.$get()! < SendType.PostFader && mix.level.$get()! > -Infinity) {
+    let sendType: SendType = SendType.Subgroup;
+
+    for (const [idx, mix] of channel.mix.$items(false, true)) {
+      idx % 2 === 0 && (sendType = mix.type.$get()!);
+
+      if (sendType < SendType.PostFader && mix.level.$get()! > -Infinity) {
         yield mix.level;
       }
     }
@@ -136,8 +146,9 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
   * getBusAdjustmentTargets(bus: Bus, index: number = 0): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn]) {
       const mix = ch.mix.$get(index);
+      const sendType = index % 2 ? ch.mix.$get(index - 1).type : mix.type;
 
-      if (mix.type.$get()! < SendType.Subgroup && mix.level.$get()! > -Infinity) {
+      if (sendType.$get()! < SendType.Subgroup && mix.level.$get()! > -Infinity) {
         yield mix.level;
       } else if (ch.mix.fader.$get()! > -Infinity) {
         yield ch.mix.fader;

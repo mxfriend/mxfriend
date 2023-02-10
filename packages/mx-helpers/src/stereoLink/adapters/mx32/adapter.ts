@@ -55,7 +55,7 @@ export class MX32StereoLinkAdapter implements StereoLinkAdapterInterface {
     return false;
   }
 
-  * getLinkableValuePairs(ch1: Container, ch2: Container): Iterable<[Value, Value]> {
+  * getLinkableValuePairs(ch1: Container, ch2: Container): Iterable<[a: Value, b: Value, delay?: boolean]> {
     if (
       !(ch1 instanceof Channel && ch2 instanceof Channel)
       && !(ch1 instanceof AuxIn && ch2 instanceof AuxIn)
@@ -67,7 +67,7 @@ export class MX32StereoLinkAdapter implements StereoLinkAdapterInterface {
     }
 
     yield * this.getLinkableValuePairsMatching(getLinkabilityChecker(this.mixer), ch1, ch2);
-    yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2)];
+    yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2), true];
 
     if (!this.mixer.config.linkcfg.hadly.$get()) {
       return;

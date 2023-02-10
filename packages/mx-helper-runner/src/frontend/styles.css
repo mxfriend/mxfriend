@@ -1,0 +1,69 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #003240;
+  color: #fafdff;
+}
+
+body {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+  font: 20px/1.4 sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  padding: 20px;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid #0b4657;
+}
+
+ul.selected-channels {
+  flex: 1 1 auto;
+}
+
+li {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  margin: 0;
+  padding: 0.125em;
+}
+
+strong {
+  flex: 1 1 auto;
+  margin: 0 0.25em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+button {
+  flex: 0 0 auto;
+  min-width: 4em;
+  margin: 0 0.25em;
+  padding: 0.25em 1em;
+  border: none;
+  text-align: center;
+  background: #0096c4;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #004960;
+  color: #5886a4;
+}
+
+button.active {
+  background: #00ab43;
+}

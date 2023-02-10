@@ -1,22 +1,26 @@
 {
   "extends": "@tsconfig/recommended",
   "compilerOptions": {
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "jsx": "react-jsx",
-    "module": "ES2020",
-    "moduleResolution": "NodeNext",
-    "target": "ES2020",
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "CommonJS",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+    "target": "ES2020"
   },
   "include": [
+    "src/common/**/*.ts",
     "src/frontend/**/*.ts"
   ]
 }

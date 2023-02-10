@@ -8,7 +8,8 @@ import {
   EnumDefinition,
   EnumValue,
   IntValue,
-  Property, StringValue,
+  Property,
+  StringValue,
 } from '@mxfriend/oscom';
 import {
   AssignPage,
@@ -24,9 +25,12 @@ import {
   MonitorPage,
   RoutingPage,
   RTAMode,
-  ScenePage, Screen,
+  ScenePage,
+  Screen,
   SelectedChannel,
-  SetupPage, TapeState, URecState,
+  SetupPage,
+  TapeState,
+  URecState,
   USBPage,
   UserBank,
   XCardType,
@@ -77,7 +81,7 @@ export class AES50State extends Container {
 
 export class SoloSwList extends Collection<EnumValue<Bool>> {
   constructor() {
-    super(() => new EnumValue(Bool), { size: 81, pad: 2 });
+    super(() => new EnumValue(Bool), { size: 80, pad: 2, callable: true });
   }
 }
 
