@@ -43,8 +43,8 @@ export class MXAirStereoLinkAdapter implements StereoLinkAdapterInterface {
     yield [this.getSoloSwitch(ch1), this.getSoloSwitch(ch2), true];
 
     if (this.mixer.config.linkcfg.preamp.$get() && ch1 instanceof Channel && ch2 instanceof Channel) {
-      const in1 = ch1.preamp.rtnsw.$get() ? ch1.config.insrc.$get() : undefined;
-      const in2 = ch2.preamp.rtnsw.$get() ? ch2.config.insrc.$get() : undefined;
+      const in1 = !ch1.preamp.rtnsw.$get() ? ch1.config.insrc.$get() : undefined;
+      const in2 = !ch2.preamp.rtnsw.$get() ? ch2.config.insrc.$get() : undefined;
 
       if (in1 !== undefined && in1 < AnalogIn.AuxL && in2 !== undefined && in2 < AnalogIn.AuxL) {
         const ha1 = this.mixer.headamp.$get(in1) as ChannelHeadamp;
