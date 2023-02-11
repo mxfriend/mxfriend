@@ -58,10 +58,8 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn]) {
       const mix = ch.mix.$get(idx);
       yield mix.on;
-
-      if (idx % 2 === 0) {
-        yield mix.type;
-      }
+      yield idx % 2 === 0 ? mix.type : ch.mix.$get(idx - 1).type;
+      yield ch.mix.fader;
     }
 
     if (bus instanceof Bus) {
@@ -75,6 +73,7 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
 
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn, ...this.mixer.bus]) {
       yield st ? ch.mix.st : ch.mix.mono;
+      yield st ? ch.mix.fader : ch.mix.mlevel;
     }
 
     yield channel.dyn.on;
@@ -150,7 +149,7 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
 
       if (sendType.$get()! < SendType.Subgroup && mix.level.$get()! > -Infinity) {
         yield mix.level;
-      } else if (ch.mix.fader.$get()! > -Infinity) {
+      } else if (sendType.$get() === SendType.Subgroup && mix.on.$get() && ch.mix.fader.$get()! > -Infinity) {
         yield ch.mix.fader;
       }
     }

@@ -51,6 +51,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
       const mix = ch.mix.$get(idx + offset);
       yield mix.grpon;
       yield mix.tap;
+      yield ch.mix.fader;
     }
 
     if (bus instanceof Bus) {
@@ -99,7 +100,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
       } else if (channel instanceof Bus) {
         yield * this.getBusAdjustmentTargets(channel, this.mixer.bus.$indexOf(channel));
       } else if (channel instanceof FxSend) {
-        yield * this.getBusAdjustmentTargets(channel, this.mixer.bus.$indexOf(channel) + 6);
+        yield * this.getBusAdjustmentTargets(channel, this.mixer.fxsend.$indexOf(channel) + 6);
       } else if (channel instanceof LR) {
         yield * this.getLRAdjustmentTargets();
       }
@@ -134,7 +135,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
 
       if (mix.tap.$get()! < SendTap.Grp && mix.level.$get()! > -Infinity) {
         yield mix.level;
-      } else if (ch.mix.fader.$get()! > -Infinity) {
+      } else if (mix.tap.$get()! === SendTap.Grp && mix.grpon.$get() && ch.mix.fader.$get()! > -Infinity) {
         yield ch.mix.fader;
       }
     }
