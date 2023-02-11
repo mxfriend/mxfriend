@@ -10,20 +10,20 @@ export class StereoTools implements HelperInterface {
   private readonly adapter: StereoToolsAdapterInterface;
   private readonly dispatcher: Dispatcher;
   private readonly stereoLink: StereoLink;
+  private readonly pairs: Map<Container, Container> = new Map();
   private readonly map: Map<ScaledValue | MappedValue, () => void> = new Map();
-  private enabled: boolean = true;
 
   constructor(adapter: StereoToolsAdapterInterface, dispatcher: Dispatcher, stereoLink: StereoLink) {
     this.adapter = adapter;
     this.dispatcher = dispatcher;
     this.stereoLink = stereoLink;
-    this.handleLink = this.handleLink.bind(this);
-    this.handleUnlink = this.handleUnlink.bind(this);
+    this.setup = this.setup.bind(this);
+    this.cleanup = this.cleanup.bind(this);
   }
 
   init(): void {
-    this.stereoLink.on('link', this.handleLink);
-    this.stereoLink.on('unlink', this.handleUnlink);
+    this.stereoLink.on('link', this.setup);
+    this.stereoLink.on('unlink', this.cleanup);
   }
 
   getInfo(): HelperInfo {
@@ -34,20 +34,20 @@ export class StereoTools implements HelperInterface {
 
   getState(channels: Container[]): HelperState {
     const linked = channels.length === 2 && this.stereoLink.isLinked(channels[0], channels[1]);
-    return !linked ? 'unavailable' : this.enabled ? 'active' : 'inactive';
+    return !linked ? 'unavailable' : this.pairs.has(channels[0]) ? 'active' : 'inactive';
   }
 
-  activate(channels: Container[]): void {
-    this.enabled = true;
+  async activate([a, b]: Container[]): Promise<void> {
+    await this.setup(a, b);
   }
 
-  deactivate(channels: Container[]): void {
-    this.enabled = false;
+  deactivate([a, b]: Container[]): void {
+    this.cleanup(a, b);
   }
 
   destroy(): void {
-    this.stereoLink.off('link', this.handleLink);
-    this.stereoLink.off('unlink', this.handleUnlink);
+    this.stereoLink.off('link', this.setup);
+    this.stereoLink.off('unlink', this.cleanup);
 
     for (const [node, handler] of this.map) {
       this.dispatcher.remove($key, node);
@@ -56,19 +56,33 @@ export class StereoTools implements HelperInterface {
     }
   }
 
-  private async handleLink(a: Container, b: Container): Promise<void> {
+  async setup(a: Container, b: Container): Promise<void> {
+    if (this.pairs.has(a) || this.pairs.has(b)) {
+      return;
+    }
+
+    this.pairs.set(a, b);
+    this.pairs.set(b, a);
+
     for (const [pa, pb] of pairs(this.adapter.getMixPanNodes(a), this.adapter.getMixPanNodes(b))) {
-      await this.setup(pa, pb);
+      await this.setupPair(pa, pb);
     }
   }
 
-  private handleUnlink(a: Container, b: Container): void {
+  cleanup(a: Container, b: Container): void {
+    if (this.pairs.get(a) !== b) {
+      return;
+    }
+
+    this.pairs.delete(a);
+    this.pairs.delete(b);
+
     for (const [pa, pb] of pairs(this.adapter.getMixPanNodes(a), this.adapter.getMixPanNodes(b))) {
-      this.cleanup(pa, pb);
+      this.cleanupPair(pa, pb);
     }
   }
 
-  private async setup(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): Promise<void> {
+  private async setupPair(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): Promise<void> {
     await this.dispatcher.addAndQuery($key, a, b);
 
     const lock = createMutualLock();
@@ -86,7 +100,7 @@ export class StereoTools implements HelperInterface {
     };
 
     const handlePan = () => {
-      if (this.enabled && lock('a')) {
+      if (lock('a')) {
         const lpan = Math.round(a.$toValue()!);
         center = Math.max(-100, Math.min(100, lpan + width / 2));
         b.$fromValue(lpan + width, true);
@@ -95,7 +109,7 @@ export class StereoTools implements HelperInterface {
     };
 
     const handleWidth = () => {
-      if (this.enabled && lock('b')) {
+      if (lock('b')) {
         const rpan = Math.round(b.$toValue()!);
         width = Math.max(-200, Math.min(200, 2 * (rpan - center)));
         a.$fromValue(center - width / 2, true);
@@ -110,7 +124,7 @@ export class StereoTools implements HelperInterface {
     this.map.set(b, handleWidth);
   }
 
-  private cleanup(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): void {
+  private cleanupPair(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): void {
     for (const n of [a, b]) {
       const h = this.map.get(n);
       h && n.$off('remote-change', h);

@@ -163,7 +163,10 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
   * getMainAdjustmentTargets(channel: Main): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
     const st = channel === this.mixer.main.st;
 
-    for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn, ...this.mixer.bus]) {
+    // no fxrtn here - those are usually post-fader effect returns; adjusting them here
+    // while also adjusting the faders of channels which feed into them would result
+    // in double the adjustment
+    for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.bus]) {
       if (st && ch.mix.st.$get() && ch.mix.fader.$get()! > -Infinity) {
         yield ch.mix.fader;
       } else if (!st && ch.mix.mono.$get() && ch.mix.mlevel.$get()! > -Infinity) {

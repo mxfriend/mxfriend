@@ -62,6 +62,11 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
   private * getLRRequiredNodes(): Iterable<Value> {
     for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.rtn, ...this.mixer.bus]) {
       yield ch.mix.lr;
+      yield ch.mix.fader;
+    }
+
+    for (const rtn of this.mixer.rtn) {
+      yield rtn.preamp.rtnsw;
     }
 
     yield this.mixer.lr.dyn.on;
@@ -140,9 +145,18 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
   }
 
   * getLRAdjustmentTargets(): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
-    for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.rtn, ...this.mixer.bus]) {
+    for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.bus]) {
       if (ch.mix.lr.$get() && ch.mix.fader.$get()! > -Infinity) {
         yield ch.mix.fader;
+      }
+    }
+
+    for (const rtn of this.mixer.rtn) {
+      // returns with rtnsw off are usually post-fader fx returns - adjusting them
+      // while also adjusting faders for the channels which feed into them would result
+      // in double the adjustment
+      if (rtn.mix.lr.$get() && rtn.mix.fader.$get()! > -Infinity && rtn.preamp.rtnsw.$get()) {
+        yield rtn.mix.fader;
       }
     }
 
