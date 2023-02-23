@@ -1,0 +1,24 @@
+name: ci
+on:
+  - push
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: '18'
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - name: Install dependencies
+        run: npm ci
+      - name: Build packages
+        run: make
+      - name: Publish packages
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${NPM_AUTH_TOKEN}' > .npmrc
+          make publish
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.MXFRIEND_NPM_PUBLISH }}

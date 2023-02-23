@@ -63,7 +63,15 @@ mx-helpers/rebuild mx-utils/rebuild : %/rebuild : node_modules common/build libm
 mx-emulator/rebuild mx-helper-runner/rebuild : %/rebuild : node_modules common/build libmx32/build libmxair/build mx-helpers/build
 	cd packages/$* && make rebuild
 
-
-
 .PHONY: rebuild
 rebuild: clean build
+
+
+
+.PHONY: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish
+common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish: %/publish:
+	if node utils/should-publish.mjs $*; then cd packages/$*; npm publish --access public; fi
+
+.PHONY: publish
+publish: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish
+
