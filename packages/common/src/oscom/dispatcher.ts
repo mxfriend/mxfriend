@@ -40,10 +40,12 @@ export class MXDispatcher extends Dispatcher {
     );
   }
 
-  async requestUpdates(): Promise<void> {
+  async requestUpdates(feedback: boolean = false): Promise<void> {
     this.cancelUpdates();
-    await this.port.send('/xremotenfb');
-    this.updateTmr = setInterval(async () => this.port.send('/xremotenfb'), 4500);
+
+    const cmd = feedback ? '/xremote' : '/xremotenfb';
+    await this.port.send(cmd);
+    this.updateTmr = setInterval(async () => this.port.send(cmd), 4500);
   }
 
   cancelUpdates(): void {
