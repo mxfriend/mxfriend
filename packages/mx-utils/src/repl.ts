@@ -72,7 +72,7 @@ const commands: Record<string, Command> = {
       const cmd = addr.slice(1);
 
       if (cmd in commands) {
-        await commands[cmd](...values.slice(1));
+        await commands[cmd](...values);
       } else {
         println(`Unknown command: ${addr}`);
       }
@@ -97,7 +97,7 @@ function println(message: string): void {
 }
 
 function parse(line: string): string[] {
-  return [...line.trim().matchAll(/"[^"]*"|\S+/g)].map((m) => m[0]);
+  return [...line.trim().matchAll(/"[^"]*"|\S+/g)].map((m) => m[0].replace(/^"(.*)"$/, '$1'));
 }
 
 function compose(types?: string, ...values: string[]): OSCArgument[] {
