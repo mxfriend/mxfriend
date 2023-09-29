@@ -29,21 +29,30 @@ export class ShowImporter {
     for (const line of data.trim().split(/\n/g)) {
       if (/^(?!#)\S/.test(line)) {
         const [cmd, ...args] = parseNodeText(line);
-        const [type, idx] = cmd.split(/\//);
+        const [type, idx] = cmd.replace(/^\//, '').split(/\//);
 
         switch (type) {
           case 'show':
-            await this.importShowInfo(args[0]);
+            console.log('Importing show details...');
+            await this.importShowInfo(args);
+            break;
+          case 'cue':
+            console.log(`Importing cue ${idx}...`);
+            await this.importShowCue(parseInt(idx, 10), args);
             break;
           case 'scene':
+            console.log(`Importing scene ${idx}...`);
             await this.importShowScene(path, parseInt(idx, 10), args);
             break;
           case 'snippet':
+            console.log(`Importing snippet ${idx}...`);
             await this.importShowSnippet(path, parseInt(idx, 10), args);
             break;
         }
       }
     }
+
+    await this.conn.send('/-action/initall', osc.compose('i', 1));
   }
 
   async importScene(path: string, idx: number, options: SceneOptions): Promise<void> {
@@ -58,12 +67,40 @@ export class ShowImporter {
     await this.conn.send('/save', osc.compose('s', 'snippet', 'i', idx, 's', options.name));
   }
 
-  private async importShowInfo(name: string): Promise<void> {
-    // todo safes
-    await this.conn.send('/-show/showfile/show/name', osc.compose('s', name));
+  private async importShowInfo([name = '', inputs, mxsends, mxbuses, console, chan16, chan32, return_, buses, lrmtxdca, effects]: string[]): Promise<void> {
+    await this.conn.send('/-action/initshow', osc.compose('i', 1));
+    await this.conn.send('/-show/showfile/show/name', osc.compose('s', name.replace(/^"(.*)"$/, '$1')));
+
+    for (const [prop, value] of Object.entries({ inputs, mxsends, mxbuses, console, chan16, chan32, return_, buses, lrmtxdca, effects })) {
+      await this.conn.send(`/-show/showfile/show/${prop.replace(/_$/, '')}`, osc.compose('i', parseInt(value ?? '0', 10)));
+    }
   }
 
-  private async importShowScene(show: string, idx: number, [name, note, safes]: string[]): Promise<void> {
+  private async importShowCue(idx: number, [
+    numb = '0',
+    name = '',
+    skip = '0',
+    scene = '-1',
+    bit = '-1',
+    miditype = '0',
+    midichan = '0',
+    midipara1 = '0',
+    midipara2 = '0',
+  ]: string[]): Promise<void> {
+    const idx3 = idx.toString().padStart(3, '0');
+
+    for (const [prop, value] of Object.entries({ skip, scene, bit, miditype, midichan, midipara1, midipara2 })) {
+      await this.conn.send(`/-show/showfile/cue/${idx3}/${prop}`, osc.compose('i', parseInt(value, 10)));
+    }
+
+    await this.conn.send('/add', osc.compose(
+      's', 'cue',
+      'i', parseInt(numb, 10),
+      's', name.replace(/^"(.*)"$/, '$1'),
+    ));
+  }
+
+  private async importShowScene(show: string, idx: number, [name = '', note = '', safes = '0']: string[]): Promise<void> {
     const sceneFile = show.replace(/\.shw$/i, `.${idx.toString().padStart(3, '0')}.scn`);
 
     await this.importScene(sceneFile, idx, {
@@ -73,7 +110,7 @@ export class ShowImporter {
     });
   }
 
-  private async importShowSnippet(show: string, idx: number, [name, eventtyp, channels, auxbuses, maingrps]: string[]): Promise<void> {
+  private async importShowSnippet(show: string, idx: number, [name = '', eventtyp = '0', channels = '0', auxbuses = '0', maingrps = '0']: string[]): Promise<void> {
     const snippetFile = show.replace(/\.shw$/i, `.${idx.toString().padStart(3, '0')}.snp`);
 
     await this.importSnippet(snippetFile, idx, {

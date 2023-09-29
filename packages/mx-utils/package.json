@@ -8,7 +8,7 @@
     "url": "https://github.com/mxfriend/mxfriend.git",
     "directory": "packages/mx-utils"
   },
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "Dan Kadera",
     "email": "me@subsonic.cz",
@@ -26,7 +26,6 @@
     "mx-param-scanner": "./dist/scanner/cli.js",
     "mx-gen-enum": "./dist/enumGenerator.js",
     "mx-forwarder": "./dist/forwarder.js",
-    "mx-repl": "./dist/repl.js",
     "mx-show": "./dist/showControl/cli.js"
   },
   "dependencies": {

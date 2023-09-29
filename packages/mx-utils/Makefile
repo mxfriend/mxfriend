@@ -20,5 +20,4 @@ dist:
 	chmod +x dist/enumGenerator.js
 	chmod +x dist/forwarder.js
 	chmod +x dist/scanner/cli.js
-	chmod +x dist/repl.js
 	chmod +x dist/showControl/cli.js

@@ -2,7 +2,7 @@ import { sleep } from '@mxfriend/common';
 import { AbstractOSCPort, isOSCType, osc, OSCMessage } from '@mxfriend/osc';
 import { UdpOSCPort } from '@mxfriend/osc/udp';
 import { writeFile } from 'fs/promises';
-import { query, TimeoutDetect } from '../utils';
+import { query, DeferrableTimeout } from '../utils';
 
 export type LogFn = (msg: string, verbose?: boolean) => void;
 
@@ -137,7 +137,7 @@ export class MXParamScanner {
       await this.worker.send(address, osc.compose('f', 1));
       await sleep(50);
 
-      const timeout = new TimeoutDetect(5000, () => {
+      const timeout = new DeferrableTimeout(5000, () => {
         cleanup();
         this.logln(`\nERROR: operation timed out, last action was '${lastOp}'`);
         reject(new Error());
@@ -179,7 +179,7 @@ export class MXParamScanner {
       });
 
       const cleanup = async () => {
-        timeout.done();
+        timeout.cancel();
         cancelUpdates();
         unsubscribe();
         await this.worker.send(address, osc.compose('f', 0));

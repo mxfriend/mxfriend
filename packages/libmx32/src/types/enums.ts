@@ -166,7 +166,7 @@ export const PatchBlock = createEnum({
   A1_8: 4, A9_16: 5, A17_24: 6, A25_32: 7, A33_40: 8, A41_48: 9,
   B1_8: 10, B9_16: 11, B17_24: 12, B25_32: 13, B33_40: 14, B41_48: 15,
   Card1_8: 16, Card9_16: 17, Card17_24: 18, Card25_32: 19,
-  Out1_8: 20, Out9_16: 21, P16_18: 22, P169_16: 23, Aux1_6Mon: 24, AuxIn1_6TB: 25,
+  Out1_8: 20, Out9_16: 21, P161_8: 22, P169_16: 23, Aux1_6Mon: 24, AuxIn1_6TB: 25,
   UserOut1_8: 26, UserOut9_16: 27, UserOut17_24: 28, UserOut25_32: 29, UserOut33_40: 30, UserOut41_48: 31,
   UserIn1_8: 32, UserIn9_16: 33, UserIn17_24: 34, UserIn25_32: 35,
 } as const, [

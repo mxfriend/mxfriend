@@ -30,7 +30,7 @@ export async function query(port: AbstractOSCPort, address: string, args?: OSCAr
 }
 
 
-export class TimeoutDetect {
+export class DeferrableTimeout {
   private readonly length: number;
   private readonly handler: () => void;
   private tmr?: NodeJS.Timeout;
@@ -46,7 +46,7 @@ export class TimeoutDetect {
     this.tmr = setTimeout(this.handler, this.length);
   }
 
-  done(): void {
+  cancel(): void {
     clearTimeout(this.tmr);
   }
 }
