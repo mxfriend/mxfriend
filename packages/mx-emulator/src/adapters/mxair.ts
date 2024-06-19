@@ -1,7 +1,7 @@
-import { AbstractMeterBank, IpAddress } from '@mxfriend/common';
+import { AbstractMeterBank, BitmaskValue, Bool, CallCommand, IpAddress } from '@mxfriend/common';
 import { Mixer, MXAIR_UDP_PORT } from '@mxfriend/libmxair';
 import { MXAirStereoLinkAdapter, StereoLinkAdapterInterface } from '@mxfriend/mx-helpers';
-import { Collection } from '@mxfriend/oscom';
+import { Collection, EnumValue } from '@mxfriend/oscom';
 import { AbstractMXEmulatorAdapter, RangeAddressResolver } from './mx';
 import { EmulatorAdapterInterface } from './types';
 
@@ -61,6 +61,28 @@ export class MXAirAdapter extends AbstractMXEmulatorAdapter<Mixer> implements Em
   protected * getMixerIPNodes(): Iterable<IpAddress> {
     yield this.mixer['-prefs'].lan.addr;
     yield this.mixer['-prefs'].lan.gateway;
+  }
+
+  protected * getMuteGroupNodes(): Iterable<EnumValue<Bool>> {
+    yield * this.mixer.config.mute;
+  }
+
+  protected * getMuteGroupTargets(): Iterable<[mask: BitmaskValue, on: EnumValue<Bool>]> {
+    for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.bus, ...this.mixer.fxsend]) {
+      yield [ch.grp.mute, ch.mix.on];
+    }
+  }
+
+  protected * getSoloSwitchStates(): Iterable<EnumValue<Bool>> {
+    yield * this.mixer['-stat'].solosw;
+  }
+
+  protected getGlobalSoloState(): EnumValue<Bool> {
+    return this.mixer['-stat'].solo;
+  }
+
+  protected getClearSoloCommand(): CallCommand {
+    return this.mixer['-action'].clearsolo;
   }
 
   async initMixer(ip: string): Promise<void> {

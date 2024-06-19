@@ -1,5 +1,4 @@
 import { Container, Node, Value } from '@mxfriend/oscom';
-import { applyToCallable } from '../types';
 
 export class SceneSerializer {
   serialize(root: Node, withHidden: boolean = false): string {
@@ -12,14 +11,14 @@ export class SceneSerializer {
     }
 
     if (node instanceof Container) {
-      const [results, unused] = applyToCallable(node, [], (node) => node.$toText());
+      const [results, unused] = node.$applyToCallable([], (node) => node.$toText());
 
       if (results && results.length) {
         yield `${node.$address} ${results.join(' ')}\n`;
       }
 
       for (const child of unused) {
-        yield * this.serializeNode(child);
+        yield * this.serializeNode(node.$get(child), hidden);
       }
     } else if (node instanceof Value) {
       if (node.$isSet()) {

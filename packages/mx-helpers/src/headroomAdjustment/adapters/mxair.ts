@@ -51,6 +51,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
       const mix = ch.mix.$get(idx + offset);
       yield mix.grpon;
       yield mix.tap;
+      yield mix.level;
       yield ch.mix.fader;
     }
 
@@ -108,12 +109,12 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
   }
 
   * getChannelAdjustmentTargets(channel: Channel | Return): Iterable<ScaledValue | MappedValue> {
-    if (channel.mix.fader.$get()! > -Infinity) {
+    if (channel.mix.fader.$toValue()! > -Infinity) {
       yield channel.mix.fader;
     }
 
     for (const mix of channel.mix) {
-      if (mix.tap.$get()! < SendTap.Post && mix.level.$get()! > -Infinity) {
+      if (mix.tap.$get()! < SendTap.Post && mix.level.$toValue()! > -Infinity) {
         yield mix.level;
       }
     }
@@ -133,9 +134,9 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
     for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.rtn]) {
       const mix = ch.mix.$get(index);
 
-      if (mix.tap.$get()! < SendTap.Grp && mix.level.$get()! > -Infinity) {
+      if (mix.tap.$get()! < SendTap.Grp && mix.level.$toValue()! > -Infinity) {
         yield mix.level;
-      } else if (mix.tap.$get()! === SendTap.Grp && mix.grpon.$get() && ch.mix.fader.$get()! > -Infinity) {
+      } else if (mix.tap.$get()! === SendTap.Grp && mix.grpon.$get() && ch.mix.fader.$toValue()! > -Infinity) {
         yield ch.mix.fader;
       }
     }
@@ -147,7 +148,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
 
   * getLRAdjustmentTargets(): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
     for (const ch of [...this.mixer.ch, this.mixer.rtn.aux, ...this.mixer.bus]) {
-      if (ch.mix.lr.$get() && ch.mix.fader.$get()! > -Infinity) {
+      if (ch.mix.lr.$get() && ch.mix.fader.$toValue()! > -Infinity) {
         yield ch.mix.fader;
       }
     }
@@ -156,7 +157,7 @@ export class MXAirHeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapter
       // returns with rtnsw off are usually post-fader fx returns - adjusting them
       // while also adjusting faders for the channels which feed into them would result
       // in double the adjustment
-      if (rtn.mix.lr.$get() && rtn.mix.fader.$get()! > -Infinity && rtn.preamp.rtnsw.$get()) {
+      if (rtn.mix.lr.$get() && rtn.mix.fader.$toValue()! > -Infinity && rtn.preamp.rtnsw.$get()) {
         yield rtn.mix.fader;
       }
     }

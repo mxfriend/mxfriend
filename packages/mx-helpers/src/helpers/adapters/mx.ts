@@ -119,7 +119,10 @@ export abstract class AbstractMXHelperAdapter<TMixer extends Mixer>
 
     await conn.open();
     await dispatcher.requestUpdates();
-    await dispatcher.addAndQuery($key, ...this.getSoloSwitches(mixer), ...this.getChannelNameNodes(mixer));
+
+    const nodes = [...this.getSoloSwitches(mixer), ...this.getChannelNameNodes(mixer)];
+    dispatcher.add($key, ...nodes);
+    await dispatcher.query(...nodes);
 
     for (const helper of helpers.values()) {
       await helper.init();

@@ -1,6 +1,14 @@
-import { AbstractMeterBank, IpAddress, Mixer, SceneLoader } from '@mxfriend/common';
+import {
+  AbstractMeterBank,
+  BitmaskValue,
+  Bool,
+  CallCommand,
+  IpAddress,
+  Mixer,
+  SceneLoader,
+} from '@mxfriend/common';
 import { StereoLinkAdapterInterface } from '@mxfriend/mx-helpers';
-import { Collection } from '@mxfriend/oscom';
+import { Collection, EnumValue } from '@mxfriend/oscom';
 import { readFile } from 'node:fs/promises';
 import { EmulatorAdapterInterface } from './types';
 
@@ -21,6 +29,11 @@ export abstract class AbstractMXEmulatorAdapter<TMixer extends Mixer> implements
   protected abstract createRangeAddressResolver(sample: string): RangeAddressResolver;
   protected abstract getBlankSceneFilePath(): string;
   protected abstract getMixerIPNodes(): Iterable<IpAddress>;
+  protected abstract getMuteGroupNodes(): Iterable<EnumValue<Bool>>;
+  protected abstract getMuteGroupTargets(): Iterable<[mask: BitmaskValue, on: EnumValue<Bool>]>;
+  protected abstract getClearSoloCommand(): CallCommand;
+  protected abstract getGlobalSoloState(): EnumValue<Bool>;
+  protected abstract getSoloSwitchStates(): Iterable<EnumValue<Bool>>;
 
   getMixer(): TMixer {
     return this.mixer;
@@ -34,7 +47,7 @@ export abstract class AbstractMXEmulatorAdapter<TMixer extends Mixer> implements
 
   async initMixer(ip: string): Promise<void> {
     const scn = new SceneLoader();
-    await scn.load(this.mixer, await readFile(this.getBlankSceneFilePath(), 'utf-8'));
+    scn.load(this.mixer, await readFile(this.getBlankSceneFilePath(), 'utf-8'));
 
     const name = `${this.model} Emulator`;
 
@@ -54,5 +67,57 @@ export abstract class AbstractMXEmulatorAdapter<TMixer extends Mixer> implements
         node.$get(i).$set(b, true);
       }
     }
+
+    this.initMuteGroups();
+    this.initSolo();
+  }
+
+  private initMuteGroups(): void {
+    const btns = [...this.getMuteGroupNodes()];
+    const targets = [...this.getMuteGroupTargets()];
+
+    for (const [grp, btn] of btns.entries()) {
+      btn.$on('remote-change', (on) => {
+        toggleMuteGroup(grp, on ?? Bool.Off);
+      });
+    }
+
+    function toggleMuteGroup(grp: number, mute: Bool): void {
+      const grpMask = 1 << grp;
+      const excludeMask = mute ? 0 : btns.reduce((m, btn, idx) => btn.$get() ? (1 << idx) | m : m, 0);
+
+      for (const [mask, on] of targets) {
+        const targetMask = mask.$get() ?? 0;
+
+        if ((targetMask & grpMask) && !(targetMask & excludeMask)) {
+          on.$set(mute ? Bool.Off : Bool.On);
+        }
+      }
+    }
+  }
+
+  private initSolo(): void {
+    const states = [...this.getSoloSwitchStates()];
+    const globalState = this.getGlobalSoloState();
+
+    const handleSolo = (on?: Bool): void => {
+      if (on) {
+        globalState.$set(Bool.On);
+      } else if (states.every((sw) => !sw.$get())) {
+        globalState.$set(Bool.Off);
+      }
+    };
+
+    for (const sw of states) {
+      sw.$on('remote-change', handleSolo);
+    }
+
+    this.getClearSoloCommand().$on('remote-call', () => {
+      for (const sw of states) {
+        sw.$set(Bool.Off);
+      }
+
+      globalState.$set(Bool.Off);
+    });
   }
 }

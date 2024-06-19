@@ -13,10 +13,8 @@ clean:
 
 .PHONY: tests
 tests:
-	jest --silent
+	jest
 
 dist:
 	tsc
-	tsc -p tsconfig.frontend.json
-	parcel build --cache-dir var/cache/parcel --dist-dir dist/frontend --public-url / 'src/frontend/**/*.html'
-	chmod +x dist/backend/cli.js
+	chmod +x dist/cli.js

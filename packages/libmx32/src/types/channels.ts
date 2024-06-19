@@ -135,33 +135,25 @@ export class ExtendedEq6 extends Collection<ExtendedEqBand> {
   }
 }
 
-const $even = Symbol('even');
-
-export abstract class AbstractSend extends Container {
+export class Send extends Container {
   @Enum(Bool) on: EnumValue<Bool>;
   @Fader(161) level: MappedValue;
-  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
-  @Property panFollow: RawEnumValue<Bool>;
 
-  private readonly [$even]: boolean;
-
-  constructor(even: boolean) {
+  constructor() {
     super(true);
-    this[$even] = even;
-  }
-
-  $getKnownProperties(): (string | number)[] {
-    const props = super.$getKnownProperties();
-    return this[$even] ? props.slice(0, 2) : props;
   }
 }
 
-export class Send extends AbstractSend {
-  @After('pan') @Enum(SendType) type: EnumValue<SendType>;
+export class OddSend extends Send {
+  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
+  @Enum(SendType) type: EnumValue<SendType>;
+  @Property panFollow: RawEnumValue<Bool>;
 }
 
-export class MatrixSend extends AbstractSend {
-  @After('pan') @Enum(MatrixSendType) type: EnumValue<MatrixSendType>;
+export class MatrixSend extends Send {
+  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
+  @Enum(MatrixSendType) type: EnumValue<MatrixSendType>;
+  @Property panFollow: RawEnumValue<Bool>;
 }
 
 export class ChannelMix extends Collection<Send> {
@@ -173,11 +165,11 @@ export class ChannelMix extends Collection<Send> {
   @Fader(161) mlevel: MappedValue;
 
   constructor() {
-    super((i) => new Send(i % 2 > 0), { size: 16, pad: 2, callable: true });
+    super((i) => i % 2 === 0 ? new OddSend() : new Send(), { size: 16, pad: 2, callable: true });
   }
 }
 
-export class BusMix extends Collection<MatrixSend> {
+export class BusMix extends Collection<Send> {
   @Enum(Bool) on: EnumValue<Bool>;
   @Fader() fader: MappedValue;
   @Enum(Bool) st: EnumValue<Bool>;
@@ -186,7 +178,7 @@ export class BusMix extends Collection<MatrixSend> {
   @Fader(161) mlevel: MappedValue;
 
   constructor() {
-    super((i) => new MatrixSend(i % 2 > 0), { size: 6, pad: 2, callable: true });
+    super((i) => i % 2 === 0 ? new MatrixSend() : new Send(), { size: 6, pad: 2, callable: true });
   }
 }
 
@@ -199,14 +191,17 @@ export class MatrixMix extends Container {
   }
 }
 
-export class MainMix extends Collection<MatrixSend> {
+export class MonoMainMix extends Collection<Send> {
   @Enum(Bool) on: EnumValue<Bool>;
   @Fader() fader: MappedValue;
-  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
 
   constructor() {
-    super((i) => new MatrixSend(i % 2 > 0), { size: 6, pad: 2, callable: true });
+    super((i) => i % 2 === 0 ? new MatrixSend() : new Send(), { size: 6, pad: 2, callable: true });
   }
+}
+
+export class StereoMainMix extends MonoMainMix {
+  @Formatted('+.0') @Linear(-100, 100, 101) pan: ScaledValue;
 }
 
 export class Groups extends Container {
@@ -274,13 +269,20 @@ export class Matrix extends Container {
   @Property grp: Groups;
 }
 
-export class Main extends Container {
+export abstract class AbstractMain extends Container {
   @Property config: BusConfig;
   @Property dyn: Compressor;
   @Property insert: Insert;
   @Property eq: ExtendedEq6;
-  @Property mix: MainMix;
   @Property grp: Groups;
+}
+
+export class MonoMain extends AbstractMain {
+  @After('eq') @Property mix: MonoMainMix;
+}
+
+export class StereoMain extends AbstractMain {
+  @After('eq') @Property mix: StereoMainMix;
 }
 
 export class DCA extends Container {
@@ -318,8 +320,8 @@ export class BusList extends Collection<Bus> {
 }
 
 export class MainList extends Container {
-  @Property st: Main;
-  @Property m: Main;
+  @Property st: StereoMain;
+  @Property m: MonoMain;
 }
 
 export class MatrixList extends Collection<Matrix> {

@@ -2,6 +2,18 @@
 /xinfo "" "XR18 Emulator" XR18 1.17
 /status active "" "XR18 Emulator"
 
+/-prefs 48K OFF 18x18 0 "XR18 Emulation" OFF OFF OFF
+/-prefs/lan DHCP
+/-prefs/lan/addr 0 0 0 0
+/-prefs/lan/mask 255 255 255 0
+/-prefs/lan/gateway 0 0 0 1
+/-prefs/ap OPEN "XR18 Emulator" "" 1
+/-prefs/is OPEN "XR18 Emulator" "" DHCP
+/-prefs/is/addr 0 0 0 0
+/-prefs/is/mask 255 255 255 0
+/-prefs/is/gateway 0 0 0 0
+/-prefs/rta PEAK 0.25
+
 /-snap "Not supported" 1
 /-snap/01 "Not supported" +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /-snap/02 "" +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -68,24 +80,224 @@
 /-snap/63 "" +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /-snap/64 "" +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-/-stat/solo OFF
+/-stat OFF OFF OFF LAN OFF
 /-stat/solosw OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF OFF
 /-stat/rta MON PRE
-/-stat/keysolo OFF
-/-stat/autosave OFF
-/-stat/netmode LAN
 
-/-prefs 48K OFF 18x18 0 "XR18 Emulation" OFF OFF OFF
-/-prefs/lan DHCP
-/-prefs/lan/addr 0 0 0 0
-/-prefs/lan/mask 255 255 255 0
-/-prefs/lan/gateway 0 0 0 1
-/-prefs/ap OPEN "XR18 Emulator" "" 1
-/-prefs/is OPEN "XR18 Emulator" "" DHCP
-/-prefs/is/addr 0 0 0 0
-/-prefs/is/mask 255 255 255 0
-/-prefs/is/gateway 0 0 0 0
-/-prefs/rta PEAK 0.25
+/-stat/networks/01 "" 0 0
+/-stat/networks/02 "" 0 0
+/-stat/networks/03 "" 0 0
+/-stat/networks/04 "" 0 0
+/-stat/networks/05 "" 0 0
+/-stat/networks/06 "" 0 0
+/-stat/networks/07 "" 0 0
+/-stat/networks/08 "" 0 0
+/-stat/networks/09 "" 0 0
+/-stat/networks/10 "" 0 0
+
+/-stat/tape STOP "" 0 0
+
+/-stat/usb "" 0
+/-stat/usb/001 FILE ""
+/-stat/usb/002 FILE ""
+/-stat/usb/003 FILE ""
+/-stat/usb/004 FILE ""
+/-stat/usb/005 FILE ""
+/-stat/usb/006 FILE ""
+/-stat/usb/007 FILE ""
+/-stat/usb/008 FILE ""
+/-stat/usb/009 FILE ""
+/-stat/usb/010 FILE ""
+/-stat/usb/011 FILE ""
+/-stat/usb/012 FILE ""
+/-stat/usb/013 FILE ""
+/-stat/usb/014 FILE ""
+/-stat/usb/015 FILE ""
+/-stat/usb/016 FILE ""
+/-stat/usb/017 FILE ""
+/-stat/usb/018 FILE ""
+/-stat/usb/019 FILE ""
+/-stat/usb/020 FILE ""
+/-stat/usb/021 FILE ""
+/-stat/usb/022 FILE ""
+/-stat/usb/023 FILE ""
+/-stat/usb/024 FILE ""
+/-stat/usb/025 FILE ""
+/-stat/usb/026 FILE ""
+/-stat/usb/027 FILE ""
+/-stat/usb/028 FILE ""
+/-stat/usb/029 FILE ""
+/-stat/usb/030 FILE ""
+/-stat/usb/031 FILE ""
+/-stat/usb/032 FILE ""
+/-stat/usb/033 FILE ""
+/-stat/usb/034 FILE ""
+/-stat/usb/035 FILE ""
+/-stat/usb/036 FILE ""
+/-stat/usb/037 FILE ""
+/-stat/usb/038 FILE ""
+/-stat/usb/039 FILE ""
+/-stat/usb/040 FILE ""
+/-stat/usb/041 FILE ""
+/-stat/usb/042 FILE ""
+/-stat/usb/043 FILE ""
+/-stat/usb/044 FILE ""
+/-stat/usb/045 FILE ""
+/-stat/usb/046 FILE ""
+/-stat/usb/047 FILE ""
+/-stat/usb/048 FILE ""
+/-stat/usb/049 FILE ""
+/-stat/usb/050 FILE ""
+/-stat/usb/051 FILE ""
+/-stat/usb/052 FILE ""
+/-stat/usb/053 FILE ""
+/-stat/usb/054 FILE ""
+/-stat/usb/055 FILE ""
+/-stat/usb/056 FILE ""
+/-stat/usb/057 FILE ""
+/-stat/usb/058 FILE ""
+/-stat/usb/059 FILE ""
+/-stat/usb/060 FILE ""
+/-stat/usb/061 FILE ""
+/-stat/usb/062 FILE ""
+/-stat/usb/063 FILE ""
+/-stat/usb/064 FILE ""
+/-stat/usb/065 FILE ""
+/-stat/usb/066 FILE ""
+/-stat/usb/067 FILE ""
+/-stat/usb/068 FILE ""
+/-stat/usb/069 FILE ""
+/-stat/usb/070 FILE ""
+/-stat/usb/071 FILE ""
+/-stat/usb/072 FILE ""
+/-stat/usb/073 FILE ""
+/-stat/usb/074 FILE ""
+/-stat/usb/075 FILE ""
+/-stat/usb/076 FILE ""
+/-stat/usb/077 FILE ""
+/-stat/usb/078 FILE ""
+/-stat/usb/079 FILE ""
+/-stat/usb/080 FILE ""
+/-stat/usb/081 FILE ""
+/-stat/usb/082 FILE ""
+/-stat/usb/083 FILE ""
+/-stat/usb/084 FILE ""
+/-stat/usb/085 FILE ""
+/-stat/usb/086 FILE ""
+/-stat/usb/087 FILE ""
+/-stat/usb/088 FILE ""
+/-stat/usb/089 FILE ""
+/-stat/usb/090 FILE ""
+/-stat/usb/091 FILE ""
+/-stat/usb/092 FILE ""
+/-stat/usb/093 FILE ""
+/-stat/usb/094 FILE ""
+/-stat/usb/095 FILE ""
+/-stat/usb/096 FILE ""
+/-stat/usb/097 FILE ""
+/-stat/usb/098 FILE ""
+/-stat/usb/099 FILE ""
+/-stat/usb/100 FILE ""
+/-stat/usb/101 FILE ""
+/-stat/usb/102 FILE ""
+/-stat/usb/103 FILE ""
+/-stat/usb/104 FILE ""
+/-stat/usb/105 FILE ""
+/-stat/usb/106 FILE ""
+/-stat/usb/107 FILE ""
+/-stat/usb/108 FILE ""
+/-stat/usb/109 FILE ""
+/-stat/usb/110 FILE ""
+/-stat/usb/111 FILE ""
+/-stat/usb/112 FILE ""
+/-stat/usb/113 FILE ""
+/-stat/usb/114 FILE ""
+/-stat/usb/115 FILE ""
+/-stat/usb/116 FILE ""
+/-stat/usb/117 FILE ""
+/-stat/usb/118 FILE ""
+/-stat/usb/119 FILE ""
+/-stat/usb/120 FILE ""
+/-stat/usb/121 FILE ""
+/-stat/usb/122 FILE ""
+/-stat/usb/123 FILE ""
+/-stat/usb/124 FILE ""
+/-stat/usb/125 FILE ""
+/-stat/usb/126 FILE ""
+/-stat/usb/127 FILE ""
+/-stat/usb/128 FILE ""
+/-stat/usb/129 FILE ""
+/-stat/usb/130 FILE ""
+/-stat/usb/131 FILE ""
+/-stat/usb/132 FILE ""
+/-stat/usb/133 FILE ""
+/-stat/usb/134 FILE ""
+/-stat/usb/135 FILE ""
+/-stat/usb/136 FILE ""
+/-stat/usb/137 FILE ""
+/-stat/usb/138 FILE ""
+/-stat/usb/139 FILE ""
+/-stat/usb/140 FILE ""
+/-stat/usb/141 FILE ""
+/-stat/usb/142 FILE ""
+/-stat/usb/143 FILE ""
+/-stat/usb/144 FILE ""
+/-stat/usb/145 FILE ""
+/-stat/usb/146 FILE ""
+/-stat/usb/147 FILE ""
+/-stat/usb/148 FILE ""
+/-stat/usb/149 FILE ""
+/-stat/usb/150 FILE ""
+/-stat/usb/151 FILE ""
+/-stat/usb/152 FILE ""
+/-stat/usb/153 FILE ""
+/-stat/usb/154 FILE ""
+/-stat/usb/155 FILE ""
+/-stat/usb/156 FILE ""
+/-stat/usb/157 FILE ""
+/-stat/usb/158 FILE ""
+/-stat/usb/159 FILE ""
+/-stat/usb/160 FILE ""
+/-stat/usb/161 FILE ""
+/-stat/usb/162 FILE ""
+/-stat/usb/163 FILE ""
+/-stat/usb/164 FILE ""
+/-stat/usb/165 FILE ""
+/-stat/usb/166 FILE ""
+/-stat/usb/167 FILE ""
+/-stat/usb/168 FILE ""
+/-stat/usb/169 FILE ""
+/-stat/usb/170 FILE ""
+/-stat/usb/171 FILE ""
+/-stat/usb/172 FILE ""
+/-stat/usb/173 FILE ""
+/-stat/usb/174 FILE ""
+/-stat/usb/175 FILE ""
+/-stat/usb/176 FILE ""
+/-stat/usb/177 FILE ""
+/-stat/usb/178 FILE ""
+/-stat/usb/179 FILE ""
+/-stat/usb/180 FILE ""
+/-stat/usb/181 FILE ""
+/-stat/usb/182 FILE ""
+/-stat/usb/183 FILE ""
+/-stat/usb/184 FILE ""
+/-stat/usb/185 FILE ""
+/-stat/usb/186 FILE ""
+/-stat/usb/187 FILE ""
+/-stat/usb/188 FILE ""
+/-stat/usb/189 FILE ""
+/-stat/usb/190 FILE ""
+/-stat/usb/191 FILE ""
+/-stat/usb/192 FILE ""
+/-stat/usb/193 FILE ""
+/-stat/usb/194 FILE ""
+/-stat/usb/195 FILE ""
+/-stat/usb/196 FILE ""
+/-stat/usb/197 FILE ""
+/-stat/usb/198 FILE ""
+/-stat/usb/199 FILE ""
+/-stat/usb/200 FILE ""
 
 /config/chlink OFF OFF OFF OFF OFF OFF OFF OFF
 /config/buslink OFF OFF OFF

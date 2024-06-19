@@ -1,5 +1,5 @@
 import { Bool } from '@mxfriend/common';
-import { AuxIn, Bus, Channel, DCA, FxReturn, Main, Mixer, MX32_UDP_PORT } from '@mxfriend/libmx32';
+import { AuxIn, Bus, Channel, DCA, FxReturn, AbstractMain, Mixer, MX32_UDP_PORT } from '@mxfriend/libmx32';
 import { Container, EnumValue, StringValue } from '@mxfriend/oscom';
 import {
   HeadroomAdjustmentAdapterInterface,
@@ -20,7 +20,7 @@ export class MX32HelperAdapter extends AbstractMXHelperAdapter<Mixer> {
 
   getChannelNames(channels: Container[]): string[] {
     return channels.map(ch => {
-      if (ch instanceof Channel || ch instanceof AuxIn || ch instanceof FxReturn || ch instanceof Bus || ch instanceof Main || ch instanceof DCA) {
+      if (ch instanceof Channel || ch instanceof AuxIn || ch instanceof FxReturn || ch instanceof Bus || ch instanceof AbstractMain || ch instanceof DCA) {
         return this.resolveName(ch, ch.config.name.$get());
       } else {
         return '?';

@@ -8,7 +8,7 @@
     "url": "https://github.com/mxfriend/mxfriend.git",
     "directory": "packages/common"
   },
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": {
     "name": "Dan Kadera",
     "email": "me@subsonic.cz",
@@ -33,7 +33,7 @@
     "dist"
   ],
   "dependencies": {
-    "@mxfriend/osc": "^2.5.6",
-    "@mxfriend/oscom": "^2.1.10"
+    "@mxfriend/osc": "^2.6.4",
+    "@mxfriend/oscom": "^2.5.0"
   }
 }

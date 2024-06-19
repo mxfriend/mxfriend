@@ -1,5 +1,5 @@
 import { Bool, ChannelHeadamp, MappedValue } from '@mxfriend/common';
-import { AnalogIn, Bus, Channel, Mixer } from '@mxfriend/libmxair';
+import { AnalogIn, Bus, Channel, Mixer, OddSend } from '@mxfriend/libmxair';
 import { Container, EnumValue, Node, pairs, ScaledValue, Value } from '@mxfriend/oscom';
 import { StereoLinkAdapterInterface } from '../../types';
 import { getLinkabilityChecker, LinkableChecker } from './utils';
@@ -82,7 +82,7 @@ export class MXAirStereoLinkAdapter implements StereoLinkAdapterInterface {
       yield ch.mix.pan;
 
       for (const idx of [0, 2, 4]) {
-        yield ch.mix.$get(idx).pan;
+        yield (ch.mix.$get(idx) as OddSend).pan;
       }
     } else if (ch instanceof Bus) {
       yield ch.mix.pan;

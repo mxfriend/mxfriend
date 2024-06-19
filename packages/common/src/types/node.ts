@@ -37,7 +37,7 @@ export class NodeCommand extends AbstractNodeCommand {
     let result: string | undefined;
 
     if (node instanceof Container) {
-      const [data] = applyToCallable(node, [], (v) => v.$toText());
+      const [data] = node.$applyToCallable([], (v) => v.$toText());
       data && data.length && (result = data.join(' '));
     } else if (node instanceof Value) {
       result = node.$toText();
@@ -60,8 +60,8 @@ export class SlashCommand extends AbstractNodeCommand {
     let result: string | undefined;
 
     if (node instanceof Container) {
-      applyToCallable(node, values, (n, v) => n.$fromText(v!, false, peer));
-      const [data] = applyToCallable(node, [], (v) => v.$toText());
+      node.$applyToCallable(values, (n, v) => n.$fromText(v!, false, peer));
+      const [data] = node.$applyToCallable([], (v) => v.$toText());
       data && data.length && (result = data.join(' '));
     } else if (node instanceof Value && values.length) {
       node.$fromText(values[0], false, peer);

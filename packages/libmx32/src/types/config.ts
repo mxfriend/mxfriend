@@ -244,7 +244,7 @@ export class DP48Assignments extends Collection<IntValue> {
 
 export class DP48GroupNames extends Collection<StringValue> {
   constructor() {
-    super(() => new StringValue(), { size: 24, pad: 2, callable: true });
+    super(() => new StringValue(), { size: 12, pad: 2, callable: true });
   }
 }
 

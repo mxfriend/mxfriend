@@ -1,8 +1,10 @@
 import { AbstractFx, FxParamList, FxType, paramListMap } from '@mxfriend/common';
 import {
-  Collection, Container,
+  Collection,
+  Container,
   Enum,
-  EnumValue, IntValue,
+  EnumValue,
+  IntValue,
   Property,
 } from '@mxfriend/oscom';
 import { FxSource, InsertFxType } from '../enums';

@@ -180,10 +180,10 @@ export class StereoLink extends EventEmitter<StereoLinkEvents> implements Helper
   }
 
   private async addAndMaybeQuery(...nodes: Value[]): Promise<void> {
-    if (this.local) {
-      this.dispatcher.add($key, ...nodes);
-    } else {
-      await this.dispatcher.addAndQuery($key, ...nodes);
+    this.dispatcher.add($key, ...nodes);
+
+    if (!this.local) {
+      await this.dispatcher.query(...nodes);
     }
   }
 

@@ -92,13 +92,16 @@ export class HeadroomAdjustment implements HelperInterface {
     }
 
     const monitor = [...this.adapter.getRequiredNodes(channels)];
-    await this.dispatcher.addAndQuery($key, ...monitor);
+    this.dispatcher.add($key, ...monitor);
+    await this.dispatcher.query(...monitor);
 
     const sources = [...this.adapter.getAdjustmentSources(channels)];
     const targets = [...this.adapter.getAdjustmentTargets(channels)]
       .map((t) => Array.isArray(t) ? t : [t, false] as const);
 
-    await this.dispatcher.addAndQuery($key, ...sources, ...targets.map(([t]) => t));
+    const nodes = [...sources, ...targets.map(([t]) => t)];
+    this.dispatcher.add($key, ...nodes);
+    await this.dispatcher.query(...nodes);
 
     this.adjustment = {
       channels,

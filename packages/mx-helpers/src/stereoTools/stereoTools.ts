@@ -83,7 +83,8 @@ export class StereoTools implements HelperInterface {
   }
 
   private async setupPair(a: ScaledValue | MappedValue, b: ScaledValue | MappedValue): Promise<void> {
-    await this.dispatcher.addAndQuery($key, a, b);
+    this.dispatcher.add($key, a, b);
+    await this.dispatcher.query(a, b);
 
     const lock = createMutualLock();
     let center: number = Math.round(a.$toValue()! + b.$toValue()!) / 2;

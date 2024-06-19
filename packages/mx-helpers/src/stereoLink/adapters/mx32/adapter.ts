@@ -1,5 +1,5 @@
 import { Bool, MappedValue } from '@mxfriend/common';
-import { AuxIn, Bus, Channel, FxReturn, Matrix, Mixer } from '@mxfriend/libmx32';
+import { AuxIn, Bus, Channel, FxReturn, Matrix, Mixer, OddSend } from '@mxfriend/libmx32';
 import { Container, EnumValue, IntValue, Node, pairs, ScaledValue, Value } from '@mxfriend/oscom';
 import { StereoLinkAdapterInterface } from '../../types';
 import { getLinkabilityChecker, LinkableChecker } from './utils';
@@ -131,7 +131,7 @@ export class MX32StereoLinkAdapter implements StereoLinkAdapterInterface {
       yield ch.mix.pan;
 
       for (const idx of [0, 2, 4, 6, 8, 10, 12, 14]) {
-        yield ch.mix.$get(idx).pan;
+        yield (ch.mix.$get(idx) as OddSend).pan;
       }
     } else if (ch instanceof Bus) {
       yield ch.mix.pan;

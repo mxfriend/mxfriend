@@ -18,12 +18,12 @@ libmx32/clean libmxair/clean : %/clean : common/clean
 mx-helpers/clean mx-utils/clean : %/clean : common/clean libmx32/clean libmxair/clean
 	cd packages/$* && make clean
 
-.PHONY: mx-emulator/clean mx-helper-runner/clean
-mx-emulator/clean mx-helper-runner/clean : %/clean : common/clean libmx32/clean libmxair/clean mx-helpers/clean
+.PHONY: mx-emulator/clean mx-helper-runner/clean mx-repeater/clean
+mx-emulator/clean mx-helper-runner/clean mx-repeater/clean : %/clean : common/clean libmx32/clean libmxair/clean mx-helpers/clean
 	cd packages/$* && make clean
 
 .PHONY: clean
-clean: common/clean libmx32/clean libmxair/clean mx-helpers/clean mx-utils/clean mx-emulator/clean mx-helper-runner/clean
+clean: common/clean libmx32/clean libmxair/clean mx-helpers/clean mx-utils/clean mx-emulator/clean mx-helper-runner/clean mx-repeater/clean
 
 
 .PHONY: common/build
@@ -38,12 +38,12 @@ libmx32/build libmxair/build : %/build : node_modules common/build
 mx-helpers/build mx-utils/build : %/build : node_modules common/build libmx32/build libmxair/build
 	cd packages/$* && make
 
-.PHONY: mx-emulator/build mx-helper-runner/build
-mx-emulator/build mx-helper-runner/build : %/build : node_modules common/build libmx32/build libmxair/build mx-helpers/build
+.PHONY: mx-emulator/build mx-helper-runner/build mx-repeater/build
+mx-emulator/build mx-helper-runner/build mx-repeater/build : %/build : node_modules common/build libmx32/build libmxair/build mx-helpers/build
 	cd packages/$* && make
 
 .PHONY: build
-build: node_modules common/build libmx32/build libmxair/build mx-helpers/build mx-utils/build mx-emulator/build mx-helper-runner/build
+build: node_modules common/build libmx32/build libmxair/build mx-helpers/build mx-utils/build mx-emulator/build mx-helper-runner/build mx-repeater/build
 
 
 
@@ -59,8 +59,8 @@ libmx32/rebuild libmxair/rebuild : %/rebuild : node_modules common/build
 mx-helpers/rebuild mx-utils/rebuild : %/rebuild : node_modules common/build libmx32/build libmxair/build
 	cd packages/$* && make rebuild
 
-.PHONY: mx-emulator/rebuild mx-helper-runner/rebuild
-mx-emulator/rebuild mx-helper-runner/rebuild : %/rebuild : node_modules common/build libmx32/build libmxair/build mx-helpers/build
+.PHONY: mx-emulator/rebuild mx-helper-runner/rebuild mx-repeater/rebuild
+mx-emulator/rebuild mx-helper-runner/rebuild mx-repeater/rebuild : %/rebuild : node_modules common/build libmx32/build libmxair/build mx-helpers/build
 	cd packages/$* && make rebuild
 
 .PHONY: rebuild
@@ -68,10 +68,10 @@ rebuild: clean build
 
 
 
-.PHONY: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish
-common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish: %/publish:
+.PHONY: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish mx-repeater/publish
+common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish mx-repeater/publish: %/publish:
 	if node utils/should-publish.mjs $*; then cd packages/$*; npm publish --access public; fi
 
 .PHONY: publish
-publish: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish
+publish: common/publish libmx32/publish libmxair/publish mx-utils/publish mx-helpers/publish mx-helper-runner/publish mx-emulator/publish mx-repeater/publish
 

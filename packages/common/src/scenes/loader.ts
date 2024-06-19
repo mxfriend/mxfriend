@@ -1,5 +1,5 @@
 import { Container, Root, Value } from '@mxfriend/oscom';
-import { applyToCallable, parseNodeText } from '../types';
+import { parseNodeText } from '../types';
 
 export class SceneLoader {
   load(mixer: Root, sceneData: string): void {
@@ -15,7 +15,7 @@ export class SceneLoader {
       const node = mixer.$lookup(address);
 
       if (node instanceof Container) {
-        applyToCallable(node, args, (child, arg) => {
+        node.$applyToCallable(args, (child, arg) => {
           arg !== undefined && child.$fromText(arg, true);
         });
       } else if (node instanceof Value) {

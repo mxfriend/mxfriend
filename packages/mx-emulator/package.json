@@ -8,7 +8,7 @@
     "url": "https://github.com/mxfriend/mxfriend.git",
     "directory": "packages/mx-emulator"
   },
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Dan Kadera",
     "email": "me@subsonic.cz",
@@ -25,11 +25,11 @@
     "mx-emulator": "./dist/cli.js"
   },
   "dependencies": {
-    "@mxfriend/common": "^1.0.0",
-    "@mxfriend/osc": "^2.5.6",
-    "@mxfriend/oscom": "^2.1.10",
-    "@mxfriend/libmxair": "^1.0.0",
-    "@mxfriend/libmx32": "^1.0.0",
-    "@mxfriend/mx-helpers": "^1.0.0"
+    "@mxfriend/common": "^1.1.0",
+    "@mxfriend/osc": "^2.6.4",
+    "@mxfriend/oscom": "^2.5.0",
+    "@mxfriend/libmxair": "^1.1.0",
+    "@mxfriend/libmx32": "^1.1.0",
+    "@mxfriend/mx-helpers": "^1.1.0"
   }
 }

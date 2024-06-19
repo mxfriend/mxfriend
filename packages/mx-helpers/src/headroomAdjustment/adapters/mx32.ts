@@ -1,6 +1,15 @@
 import { MappedValue } from '@mxfriend/common';
-import { AuxIn, Bus, Channel, Main, Mixer, SendType } from '@mxfriend/libmx32';
-import { Collection, Container, ScaledValue, Value } from '@mxfriend/oscom';
+import {
+  AuxIn,
+  Bus,
+  Channel,
+  AbstractMain,
+  Mixer,
+  OddSend,
+  SendType,
+  MonoMain, StereoMain,
+} from '@mxfriend/libmx32';
+import { Container, ScaledValue, Value } from '@mxfriend/oscom';
 import { HeadroomAdjustmentAdapterInterface } from '../types';
 
 export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterInterface {
@@ -19,8 +28,8 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
       if (channel instanceof Channel || channel instanceof AuxIn) {
         yield * this.getChannelRequiredNodes(channel);
       } else if (channel instanceof Bus) {
-        yield * this.getBusRequiredNodes(channel, this.mixer.bus);
-      } else if (channel instanceof Main) {
+        yield * this.getBusRequiredNodes(channel);
+      } else if (channel instanceof AbstractMain) {
         yield * this.getMainRequiredNodes(channel);
       }
     }
@@ -32,11 +41,11 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     yield channel.mix.mono;
     yield channel.mix.mlevel;
 
-    for (const [i, mix] of channel.mix.$items(false, true)) {
+    for (const mix of channel.mix.$items()) {
       yield mix.on;
       yield mix.level;
 
-      if (i % 2 === 0) {
+      if (mix instanceof OddSend) {
         yield mix.type;
       }
     }
@@ -52,13 +61,16 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     }
   }
 
-  private * getBusRequiredNodes(bus: Bus, collection: Collection<Bus>): Iterable<Value> {
-    const idx = collection.$indexOf(bus);
+  private * getBusRequiredNodes(bus: Bus): Iterable<Value> {
+    const idx = this.mixer.bus.$indexOf(bus);
 
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn]) {
       const mix = ch.mix.$get(idx);
+      const oddMix = (idx % 2 ? ch.mix.$get(idx - 1) : mix) as OddSend;
+
       yield mix.on;
-      yield idx % 2 === 0 ? mix.type : ch.mix.$get(idx - 1).type;
+      yield mix.level;
+      yield oddMix.type;
       yield ch.mix.fader;
     }
 
@@ -68,7 +80,7 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     }
   }
 
-  private * getMainRequiredNodes(channel: Main): Iterable<Value> {
+  private * getMainRequiredNodes(channel: AbstractMain): Iterable<Value> {
     const st = channel === this.mixer.main.st;
 
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn, ...this.mixer.bus]) {
@@ -95,7 +107,7 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
             yield this.mixer.headamp.$get(idx).gain;
           }
         }
-      } else if (channel instanceof Bus || channel instanceof Main) {
+      } else if (channel instanceof Bus || channel instanceof MonoMain || channel instanceof StereoMain) {
         yield channel.mix.fader;
       }
     }
@@ -110,23 +122,23 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
         yield * this.getChannelAdjustmentTargets(channel);
       } else if (channel instanceof Bus) {
         yield * this.getBusAdjustmentTargets(channel, this.mixer.bus.$indexOf(channel));
-      } else if (channel instanceof Main) {
+      } else if (channel instanceof AbstractMain) {
         yield * this.getMainAdjustmentTargets(channel);
       }
     }
   }
 
   * getChannelAdjustmentTargets(channel: Channel | AuxIn): Iterable<ScaledValue | MappedValue> {
-    if (channel.mix.fader.$get()! > -Infinity) {
+    if (channel.mix.fader.$toValue()! > -Infinity) {
       yield channel.mix.fader;
     }
 
     let sendType: SendType = SendType.Subgroup;
 
-    for (const [idx, mix] of channel.mix.$items(false, true)) {
-      idx % 2 === 0 && (sendType = mix.type.$get()!);
+    for (const mix of channel.mix.$items()) {
+      mix instanceof OddSend && (sendType = mix.type.$get()!);
 
-      if (sendType < SendType.PostFader && mix.level.$get()! > -Infinity) {
+      if (sendType < SendType.PostFader && mix.level.$toValue()! > -Infinity) {
         yield mix.level;
       }
     }
@@ -145,11 +157,12 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
   * getBusAdjustmentTargets(bus: Bus, index: number = 0): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.fxrtn]) {
       const mix = ch.mix.$get(index);
-      const sendType = index % 2 ? ch.mix.$get(index - 1).type : mix.type;
+      const oddMix = (index % 2 ? ch.mix.$get(index - 1) : mix) as OddSend;
+      const sendType = oddMix.type;
 
-      if (sendType.$get()! < SendType.Subgroup && mix.level.$get()! > -Infinity) {
+      if (sendType.$get()! < SendType.Subgroup && mix.level.$toValue()! > -Infinity) {
         yield mix.level;
-      } else if (sendType.$get() === SendType.Subgroup && mix.on.$get() && ch.mix.fader.$get()! > -Infinity) {
+      } else if (sendType.$get() === SendType.Subgroup && mix.on.$get() && ch.mix.fader.$toValue()! > -Infinity) {
         yield ch.mix.fader;
       }
     }
@@ -159,16 +172,16 @@ export class MX32HeadroomAdjustmentAdapter implements HeadroomAdjustmentAdapterI
     }
   }
 
-  * getMainAdjustmentTargets(channel: Main): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
+  * getMainAdjustmentTargets(channel: AbstractMain): Iterable<ScaledValue | MappedValue | [ScaledValue | MappedValue, boolean]> {
     const st = channel === this.mixer.main.st;
 
     // no fxrtn here - those are usually post-fader effect returns; adjusting them here
     // while also adjusting the faders of channels which feed into them would result
     // in double the adjustment
     for (const ch of [...this.mixer.ch, ...this.mixer.auxin, ...this.mixer.bus]) {
-      if (st && ch.mix.st.$get() && ch.mix.fader.$get()! > -Infinity) {
+      if (st && ch.mix.st.$get() && ch.mix.fader.$toValue()! > -Infinity) {
         yield ch.mix.fader;
-      } else if (!st && ch.mix.mono.$get() && ch.mix.mlevel.$get()! > -Infinity) {
+      } else if (!st && ch.mix.mono.$get() && ch.mix.mlevel.$toValue()! > -Infinity) {
         yield ch.mix.mlevel;
       }
     }

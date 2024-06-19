@@ -11,8 +11,8 @@ export type NodeSubscription = {
   address: string;
 };
 
-export type BatchSubscription = {
-  type: 'batch';
+export type FormatSubscription = {
+  type: 'format';
   expires: number;
   next: number;
   interval: number;
@@ -29,7 +29,7 @@ export type MeterSubscription = {
   param2?: number;
 };
 
-export type Subscription = NodeSubscription | BatchSubscription | MeterSubscription;
+export type Subscription = NodeSubscription | FormatSubscription | MeterSubscription;
 
 export type ClientEvents = {
   expire: [client: Client];
@@ -91,12 +91,12 @@ export class Client extends EventEmitter<ClientEvents> {
     this.postponeExpiration();
   }
 
-  async batchSubscribe(alias: string, patterns: string[], rangeStart: number, rangeEnd: number, factor: number = 1): Promise<void> {
+  async formatSubscribe(alias: string, patterns: string[], rangeStart: number, rangeEnd: number, factor: number = 1): Promise<void> {
     const now = Date.now();
     const addresses = this.adapter.resolveSubscriptionPatterns(patterns, rangeStart, rangeEnd);
 
     this.subscriptions.set(alias, {
-      type: 'batch',
+      type: 'format',
       expires: now + EXPIRATION_INTERVAL,
       next: now,
       interval: factor * UPDATE_INTERVAL,
@@ -173,8 +173,8 @@ export class Client extends EventEmitter<ClientEvents> {
           case 'node':
             await this.dispatcher.send(this.adapter.getMixer().$lookup(subscription.address), this);
             break;
-          case 'batch':
-            await this.dispatcher.sendMessage(alias, this.getBatchPayload(subscription.addresses), this);
+          case 'format':
+            await this.dispatcher.sendMessage(alias, this.getFormatSubscriptionPayload(subscription.addresses), this);
             break;
           case 'meter': {
             const data = this.adapter.getMeters().$get(subscription.bank).$toBatchBlob();
@@ -194,7 +194,7 @@ export class Client extends EventEmitter<ClientEvents> {
     this.cleanupSubscriptions();
   }
 
-  private getBatchPayload(addresses: string[]): OSCArgument[] {
+  private getFormatSubscriptionPayload(addresses: string[]): OSCArgument[] {
     const payloads: BufferInterface[] = [];
     let size: number = 0;
 

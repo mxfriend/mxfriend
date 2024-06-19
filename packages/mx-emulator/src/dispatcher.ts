@@ -1,8 +1,7 @@
 import {
   AbstractMeterBank,
-  applyToCallable,
   BatchSubscribeCommand,
-  FormatSubscribeCommand,
+  FormatSubscribeCommand, RenewCommand, SubscribeCommand, UnsubscribeCommand,
   XRemoteCommand,
 } from '@mxfriend/common';
 import { StereoLink } from '@mxfriend/mx-helpers';
@@ -57,8 +56,6 @@ export class EmulatorDispatcher extends Dispatcher {
   }
 
   protected * createNodeListeners(node: Node): IterableIterator<[string, AnyEventHandler]> {
-    // intentionally no super() call
-
     if (node instanceof Value) {
       yield ['local-change', this.handleNodeChange];
       yield ['remote-change', this.handleNodeChange];
@@ -67,23 +64,41 @@ export class EmulatorDispatcher extends Dispatcher {
         const client = peer && this.clients.get(peer.ip, peer.port);
         client && client.subscribeUpdates(node.$address === '/xremote');
       }];
+    } else if (node instanceof SubscribeCommand) {
+      yield ['remote-call', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
+        const [address, tf] = osc.extract(args, 's', 'i?');
+        const client = peer && this.clients.get(peer.ip, peer.port);
+        address && client && client.subscribeNode(address, tf);
+      }];
     } else if (node instanceof FormatSubscribeCommand) {
       yield ['remote-call', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
         const [alias, patterns, start, end, tf] = osc.extract(args, 's', '...s', 'i', 'i', 'i');
         const client = peer && this.clients.get(peer.ip, peer.port);
-        alias && client && await client.batchSubscribe(alias, patterns, start, end, tf);
+        alias && client && await client.formatSubscribe(alias, patterns, start, end, tf);
       }];
     } else if (node instanceof BatchSubscribeCommand) {
       yield ['remote-call', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
         const [alias, pattern, start, end, tf] = osc.extract(args, 's', 's', 'i', 'i', 'i');
         const client = peer && this.clients.get(peer.ip, peer.port);
-        alias && client && await client.subscribeMeters(alias, parseInt(pattern.replace(/^\/?meters\//, ''), 10), start, end, tf);
+        alias && client && pattern.startsWith('/meters/') && await client.subscribeMeters(alias, parseInt(pattern.slice(8), 10), start, end, tf);
       }];
     } else if (node instanceof AbstractMeterBank) {
       yield ['remote-subscribe', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
         const [start, end, tf] = osc.extract(args, 'i?', 'i?', 'i?');
         const client = peer && this.clients.get(peer.ip, peer.port);
         client && await client.subscribeMeters(node.$address, this.adapter.getMeters().$indexOf(node), start, end, tf);
+      }];
+    } else if (node instanceof RenewCommand) {
+      yield ['remote-call', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
+        const [aliases = []] = osc.extract(args, '...s');
+        const client = peer && this.clients.get(peer.ip, peer.port);
+        client && client.renewSubscriptions(...aliases);
+      }];
+    } else if (node instanceof UnsubscribeCommand) {
+      yield ['remote-call', async (args: OSCArgument[], node: any, peer?: UdpOSCPeer): Promise<void> => {
+        const [aliases = []] = osc.extract(args, '...s');
+        const client = peer && this.clients.get(peer.ip, peer.port);
+        client && client.unsubscribe(...aliases);
       }];
     }
   }
@@ -98,14 +113,14 @@ export class EmulatorDispatcher extends Dispatcher {
 
   private async broadcastNode(node: Node, clients: Client[]): Promise<void> {
     if (node instanceof Container) {
-      const [args, unused] = applyToCallable(node, [], (v) => v.$toOSC());
+      const [args, unused] = node.$applyToCallable([], (v) => v.$toOSC());
 
       if (args && args.length) {
         await this.broadcastMessage(node.$address, args, clients);
       }
 
       for (const child of unused) {
-        await this.broadcastNode(child, clients);
+        await this.broadcastNode(node.$get(child), clients);
       }
     } else if (node instanceof Value) {
       await this.broadcastValue(node, clients);
